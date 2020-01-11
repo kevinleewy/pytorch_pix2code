@@ -1,0 +1,243 @@
+{
+    "opening-tag": "{",
+    "closing-tag": "}",
+    "elements": [
+        {
+            "id": "body",
+            "dsl": {
+				"android":"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LinearLayout\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/container\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:orientation=\"vertical\"\n    tools:context=\"com.tonybeltramelli.android_gui.MainActivity\">\n    {}\n</LinearLayout>\n",
+				"ios":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB\" version=\"3.0\" toolsVersion=\"11201\" systemVersion=\"15G1217\" targetRuntime=\"iOS.CocoaTouch\" propertyAccessControl=\"none\" useAutolayout=\"YES\" useTraitCollections=\"YES\" colorMatched=\"YES\">\n    <dependencies>\n        <deployment identifier=\"iOS\"/>\n        <plugIn identifier=\"com.apple.InterfaceBuilder.IBCocoaTouchPlugin\" version=\"11161\"/>\n        <capability name=\"documents saved in the Xcode 8 format\" minToolsVersion=\"8.0\"/>\n    </dependencies>\n    <scenes>\n        <!--View Controller-->\n        <scene sceneID=\"qAw-JF-viq\">\n            <objects>\n                <viewController id=\"[ID]\" sceneMemberID=\"viewController\">\n                    <layoutGuides>\n                        <viewControllerLayoutGuide type=\"top\" id=\"[ID]\"/>\n                        <viewControllerLayoutGuide type=\"bottom\" id=\"[ID]\"/>\n                    </layoutGuides>\n                    <view key=\"view\" contentMode=\"center\" id=\"[ID]\">\n                        <rect key=\"frame\" x=\"0.0\" y=\"0.0\" width=\"375\" height=\"667\"/>\n                        <autoresizingMask key=\"autoresizingMask\" widthSizable=\"YES\" heightSizable=\"YES\"/>\n                        <subviews>\n                          {}\n                        </subviews>\n                        <color key=\"backgroundColor\" white=\"1\" alpha=\"1\" colorSpace=\"calibratedWhite\"/>\n                    </view>\n                </viewController>\n                <placeholder placeholderIdentifier=\"IBFirstResponder\" id=\"[ID]\" userLabel=\"First Responder\" sceneMemberID=\"firstResponder\"/>\n            </objects>\n            <point key=\"canvasLocation\" x=\"20\" y=\"95.802098950524751\"/>\n        </scene>\n    </scenes>\n</document>\n",
+				"web": "<html>\n  <header>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\">\n<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css\" integrity=\"sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp\" crossorigin=\"anonymous\">\n<style>\n.header{margin:20px 0}nav ul.nav-pills li{background-color:#333;border-radius:4px;margin-right:10px}.col-lg-3{width:24%;margin-right:1.333333%}.col-lg-6{width:49%;margin-right:2%}.col-lg-12,.col-lg-3,.col-lg-6{margin-bottom:20px;border-radius:6px;background-color:#f5f5f5;padding:20px}.row .col-lg-3:last-child,.row .col-lg-6:last-child{margin-right:0}footer{padding:20px 0;text-align:center;border-top:1px solid #bbb}\n</style>\n    <title>Claris Pix2Code</title>\n  </header>\n  <body>\n    <main class=\"container\">\n      {}\n      <footer class=\"footer\">\n        <p>&copy; Kevin Lee, Claris 2020</p>\n      </footer>\n    </main>\n  </body>\n</html>\n"
+            },
+			"min_weight": 1,
+            "max_weight": 10,
+            "children": [
+                {
+                    "id": "header",
+                    "weight": 1
+                },
+                {
+                    "id": "row",
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "id": "header",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<div class=\"header clearfix\">\n  <nav>\n    <ul class=\"nav nav-pills pull-left\">\n      {}\n    </ul>\n  </nav>\n</div>\n"
+            },
+			"min_weight": 1,
+            "max_weight": 4,
+            "children": [
+                {
+                    "id": "btn-active",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-inactive",
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "id": "row",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<div class=\"row\">{}</div>\n"
+            },
+			"min_weight": 1,
+            "max_weight": 12,
+            "children": [
+                {
+                    "id": "quadruple",
+                    "weight": 4
+                },
+                {
+                    "id": "double",
+                    "weight": 6
+                },
+                {
+                    "id": "single",
+                    "weight": 12
+                }
+            ]
+        },
+        {
+            "id": "btn-active",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<li class=\"active\"><a href=\"#\">[]</a></li>\n"
+            },
+			"min_weight": 0,
+            "max_weight": 0,
+            "children": []
+        },
+        {
+            "id": "btn-inactive",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<li><a href=\"#\">[]</a></li>\n"
+            },
+			"min_weight": 0,
+            "max_weight": 0,
+            "children": []
+        },
+        {
+            "id": "quadruple",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<div class=\"col-lg-3\">\n{}\n</div>\n"
+            },
+			"min_weight": 1,
+            "max_weight": 3,
+            "children": [
+                {
+                    "id": "small-title",
+                    "weight": 1
+                },
+                {
+                    "id": "text",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-green",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-orange",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-red",
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "id": "double",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<div class=\"col-lg-6\">\n{}\n</div>\n"
+            },
+			"min_weight": 1,
+            "max_weight": 3,
+            "children": [
+                {
+                    "id": "small-title",
+                    "weight": 1
+                },
+                {
+                    "id": "text",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-green",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-orange",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-red",
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "id": "single",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<div class=\"col-lg-12\">\n{}\n</div>\n"
+            },
+			"min_weight": 1,
+            "max_weight": 3,
+            "children": [
+                {
+                    "id": "small-title",
+                    "weight": 1
+                },
+                {
+                    "id": "text",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-green",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-orange",
+                    "weight": 1
+                },
+                {
+                    "id": "btn-red",
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "id": "btn-green",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<a class=\"btn btn-success\" href=\"#\" role=\"button\">[]</a>\n"
+            },
+			"min_weight": 0,
+            "max_weight": 0,
+            "children": []
+        },
+        {
+            "id": "btn-orange",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<a class=\"btn btn-warning\" href=\"#\" role=\"button\">[]</a>\n"
+            },
+			"min_weight": 0,
+            "max_weight": 0,
+            "children": []
+        },
+        {
+            "id": "btn-red",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<a class=\"btn btn-danger\" href=\"#\" role=\"button\">[]</a>\n"
+            },
+			"min_weight": 0,
+            "max_weight": 0,
+            "children": []
+        },
+        {
+            "id": "small-title",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<h4>[]</h4>"
+            },
+			"min_weight": 0,
+            "max_weight": 0,
+            "children": []
+        },
+        {
+            "id": "text",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<p>[]</p>"
+            },
+			"min_weight": 0,
+            "max_weight": 0,
+            "children": []
+        }
+    ]
+}

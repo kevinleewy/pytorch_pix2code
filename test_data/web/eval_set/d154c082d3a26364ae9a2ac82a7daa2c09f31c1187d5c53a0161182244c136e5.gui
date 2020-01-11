@@ -1,0 +1,26 @@
+row {
+single {
+btn-green, small-title, small-title
+}
+}
+row {
+quadruple {
+small-title
+}
+double {
+small-title, small-title, text
+}
+}
+row {
+single {
+btn-orange, btn-green
+}
+}
+row {
+double {
+text, btn-red, small-title
+}
+double {
+small-title, small-title
+}
+}
