@@ -57,6 +57,10 @@ def generate(path, count, compiler, generator, hashes):
                 pbar.update(1)
 
 def main():
+
+    if opt.seed:
+        np.random.seed(opt.seed)
+
     compiler = Compiler(opt.config)
     generator = Generator(opt.config)
     hashes = set()
@@ -78,5 +82,6 @@ if __name__ == '__main__':
     parser.add_argument('--num-train', type=int, default=10000, help='number of gui files to generate for the training set')
     parser.add_argument('--num-eval', type=int, default=1000, help='number of gui files to generate for the test set')
     parser.add_argument('--domain', '-d', type=str, choices=['android', 'ios', 'web'], default='web', help='web, android or ios')
+    parser.add_argument('--seed', type=int, default=1234, help='RNG seed')
     opt = parser.parse_args()
     main()

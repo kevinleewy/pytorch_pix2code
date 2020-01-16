@@ -51,7 +51,7 @@ cd datasets
 zip -F pix2code_datasets.zip --out datasets.zip
 unzip datasets.zip
 
-cd ../model
+cd ../src
 
 # split training set and evaluation set while ensuring no training example in the evaluation set
 # usage: build_datasets.py <input path> <distribution (default: 6)>
@@ -69,7 +69,7 @@ cd ../model
 Train the model:
 ```sh
 mkdir bin
-cd model
+cd src
 
 # provide input path to training data and output path to save trained model and metadata
 # usage: train.py <input path> <output path> <is memory intensive (default: 0)> <pretrained weights (optional)>
@@ -88,7 +88,7 @@ cd model
 Generate code for batch of GUIs:
 ```sh
 mkdir code
-cd model
+cd src
 
 # generate DSL code (.gui file), the default search method is greedy
 # usage: generate.py <trained weights path> <trained model name> <input image> <output path> <search method (default: greedy)>
@@ -104,7 +104,7 @@ cd model
 Generate code for a single GUI image:
 ```sh
 mkdir code
-cd model
+cd src
 
 # generate DSL code (.gui file), the default search method is greedy
 # usage: sample.py <trained weights path> <trained model name> <input image> <output path> <search method (default: greedy)>
