@@ -1,7 +1,7 @@
 __author__ = 'Kevin Lee - kevin_lee@claris.com'
 
 import numpy as np
-
+from .Vocabulary
 
 class Utils:
     @staticmethod
@@ -32,3 +32,28 @@ class Utils:
         cv2.imshow("view", image)
         cv2.waitKey(0)
         cv2.destroyWindow("view")
+
+    @staticmethod
+    def load_doc(filename):
+        file = open(filename, 'r')
+        text = file.read()
+        file.close()
+        return text
+
+    @staticmethod
+    def build_vocab (vocab_file_path):
+        vocab = Vocabulary()
+
+        # Load the vocab file (super basic split())
+        words_raw = load_doc(vocab_file_path)
+        words = words_raw.split(' ')
+        
+        for i, word in enumerate(words):
+            vocab.add_word(word)
+
+        vocab.add_word(' ')
+        vocab.add_word('<unk>') # If we find an unknown word
+        
+        print('Created vocabulary of ' + str(len(vocab)) + ' items from ' + vocab_file_path)
+        
+        return vocab    
