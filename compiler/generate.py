@@ -8,6 +8,7 @@ import hashlib
 import json
 import numpy as np
 import os
+import shutil
 import sys
 
 from classes.Compiler import *
@@ -19,14 +20,18 @@ from tqdm import tqdm
 TRAINING_SET_NAME = "training_set"
 EVALUATION_SET_NAME = "eval_set"
 
-def generate(path, count, compiler, generator, hashes):
+def generate(path, count, compiler, generator, hashes, css):
     
     i = 0
     collisions = 0
 
     #Create output directory if it doesn't exist
-    if not os.path.exists(path):
-        os.makedirs(path)
+    assets_path = os.path.join(path, 'assets')
+    if not os.path.exists(assets_path):
+        os.makedirs(assets_path)
+
+    #Copy CSS file
+    shutil.copyfile(css, os.path.join(assets_path, 'styles.css'))
 
     #Generate samples
     with tqdm(total=count) as pbar:
@@ -56,7 +61,7 @@ def generate(path, count, compiler, generator, hashes):
             }
 
             imgkit.from_file(compiled_file_path, output_file_path, options=options)
-            os.remove(compiled_file_path)
+            # os.remove(compiled_file_path)
 
             i += 1
             pbar.update(1)
@@ -77,17 +82,18 @@ def main():
     eval_dir = os.path.join(opt.out_dir, opt.domain, EVALUATION_SET_NAME)
 
     #Generate training set
-    train_count, train_collisions = generate(train_dir, opt.num_train, compiler, generator, hashes)
+    train_count, train_collisions = generate(train_dir, opt.num_train, compiler, generator, hashes, opt.css)
     print('Finished generating {} training data. {} collisions.'.format(train_count, train_collisions))
 
     #Generate eval set
-    eval_count, eval_collisions = generate(eval_dir, opt.num_eval, compiler, generator, hashes)
+    eval_count, eval_collisions = generate(eval_dir, opt.num_eval, compiler, generator, hashes, opt.css)
     print('Finished generating {} eval data. {} collisions.'.format(eval_count, eval_collisions))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--out-dir', '-o', type=str, required=True, help='output path')
     parser.add_argument('--config', '--cfg', '-c', type=str, required=True, help='*-config.json path')
+    parser.add_argument('--css', type=str, required=True, help='.css path')
     parser.add_argument('--num-train', type=int, default=10000, help='number of gui files to generate for the training set')
     parser.add_argument('--num-eval', type=int, default=1000, help='number of gui files to generate for the test set')
     parser.add_argument('--domain', '-d', type=str, choices=['android', 'ios', 'web'], default='web', help='web, android or ios')
