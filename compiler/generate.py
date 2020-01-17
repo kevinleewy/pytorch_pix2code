@@ -22,6 +22,7 @@ EVALUATION_SET_NAME = "eval_set"
 def generate(path, count, compiler, generator, hashes):
     
     i = 0
+    collisions = 0
 
     #Create output directory if it doesn't exist
     if not os.path.exists(path):
@@ -34,28 +35,33 @@ def generate(path, count, compiler, generator, hashes):
             content_hash = sample.replace(" ", "").replace("\n", "")
             content_hash = hashlib.sha256(content_hash.encode('utf-8')).hexdigest()
 
-            if content_hash not in hashes:
-                hashes.add(content_hash)
-                input_file_path = os.path.join(path, content_hash + '.gui')
-                output_file_path = os.path.join(path, content_hash + '.png')
+            if content_hash in hashes:
+                collisions += 1
+                continue
 
-                with open(input_file_path, 'w') as f:
-                    f.write(sample)
+            hashes.add(content_hash)
+            input_file_path = os.path.join(path, content_hash + '.gui')
+            output_file_path = os.path.join(path, content_hash + '.png')
 
-                compiled_file_path = compile(compiler, input_file_path, '[]', opt.domain)
+            with open(input_file_path, 'w') as f:
+                f.write(sample)
 
-                options = {
-                    'format': 'png',
-                    'quality': 10,
-                    'quiet': '',
-                    'width': 1500
-                }
+            compiled_file_path = compile(compiler, input_file_path, '[]', opt.domain)
 
-                imgkit.from_file(compiled_file_path, output_file_path, options=options)
-                os.remove(compiled_file_path)
+            options = {
+                'format': 'png',
+                'quality': 10,
+                'quiet': '',
+                'width': 1500
+            }
 
-                i += 1
-                pbar.update(1)
+            imgkit.from_file(compiled_file_path, output_file_path, options=options)
+            os.remove(compiled_file_path)
+
+            i += 1
+            pbar.update(1)
+
+    return i, collisions        
 
 def main():
 
@@ -71,10 +77,12 @@ def main():
     eval_dir = os.path.join(opt.out_dir, opt.domain, EVALUATION_SET_NAME)
 
     #Generate training set
-    generate(train_dir, opt.num_train, compiler, generator, hashes)
+    train_count, train_collisions = generate(train_dir, opt.num_train, compiler, generator, hashes)
+    print('Finished generating {} training data. {} collisions.'.format(train_count, train_collisions))
 
-    #Generate training set
-    generate(eval_dir, opt.num_eval, compiler, generator, hashes)
+    #Generate eval set
+    eval_count, eval_collisions = generate(eval_dir, opt.num_eval, compiler, generator, hashes)
+    print('Finished generating {} eval data. {} collisions.'.format(eval_count, eval_collisions))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
