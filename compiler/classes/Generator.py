@@ -18,18 +18,20 @@ class Generator:
 
         elem = self.elements[root]
 
-        if not elem['children']:
+        if not elem['children_groups']:
             return root if root is not 'body' else ''
 
         childrenSample = []
-        currentWeight = 0
-        while currentWeight < elem['min_weight'] or random.random() > self.terminate_prob:
-            child=random.choice(elem['children'])
-            if currentWeight + child['weight'] > elem['max_weight']:
-                continue
-            childrenSample.append(self.sample(root=child['id']))
-            currentWeight += child['weight']
-        
+
+        for group in elem['children_groups']:
+            currentWeight = 0
+            while currentWeight < group['min_weight'] or random.random() > self.terminate_prob:
+                child = random.choice(group['children'])
+                if currentWeight + child['weight'] > group['max_weight']:
+                    continue
+                childrenSample.append(self.sample(root=child['id']))
+                currentWeight += child['weight']
+            
         childrenSample = ', '.join(childrenSample)
 
         if root is 'body':
