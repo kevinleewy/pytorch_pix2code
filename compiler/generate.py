@@ -61,7 +61,7 @@ def generate(path, count, compiler, generator, hashes, css):
             }
 
             imgkit.from_file(compiled_file_path, output_file_path, options=options)
-            # os.remove(compiled_file_path)
+            os.remove(compiled_file_path)
 
             i += 1
             pbar.update(1)
