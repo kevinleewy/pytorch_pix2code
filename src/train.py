@@ -39,9 +39,9 @@ def main():
     save_after_x_epochs = 10
     log_step = 5
 
-    # Paths
-    data_dir = '../datasets/web/training_set/' # For testing purposes, we use a pre-split dataset rather than do it here
-    dev_data_dir = '../datasets/web/eval_set/'
+    # Dataset paths (For testing purposes, we use a pre-split dataset rather than do it here)
+    data_dir = os.path.join(opt.dataset, 'training_set')
+    dev_data_dir = os.path.join(opt.dataset, 'eval_set')
 
     # DO NOT CHANGE:
     crop_size = 224 # Required by resnet152
@@ -217,6 +217,7 @@ def main():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset', type=str, required=True, help='dataset path. Must contain training_set and eval_set subdirectories.')
     parser.add_argument('--out-dir', '-o', type=str, required=True, help='output path for saving model weights')
     parser.add_argument('--vocab', '-v', type=str, required=False, default='../bootstrap.vocab', help='*-config.json path')
     parser.add_argument('--weights', '-w', type=str, required=False, default='', help='weights to preload into model')
