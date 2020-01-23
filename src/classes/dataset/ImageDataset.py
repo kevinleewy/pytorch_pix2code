@@ -27,7 +27,7 @@ class ImageDataset (Dataset):
                 self.raw_image_names.append(filename)
             elif filename[-3:] == 'gui':
                 # Load .gui file
-                data = Utils.load_doc(data_dir + filename)
+                data = Utils.load_doc(os.path.join(data_dir, filename))
                 self.raw_captions.append(data)
                 
         print('Created dataset of ' + str(len(self)) + ' items from ' + data_dir)
