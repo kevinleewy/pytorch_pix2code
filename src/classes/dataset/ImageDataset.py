@@ -1,4 +1,12 @@
-class ImageHTMLDataSet (Dataset):
+import os
+import torch
+from torch.utils.data import Dataset
+from PIL import Image
+
+from classes.Utils import *
+from classes.Vocabulary import *
+
+class ImageDataset (Dataset):
     def __init__ (self, data_dir, vocab, transform):
         self.data_dir = data_dir
         self.vocab = vocab
@@ -19,7 +27,7 @@ class ImageHTMLDataSet (Dataset):
                 self.raw_image_names.append(filename)
             elif filename[-3:] == 'gui':
                 # Load .gui file
-                data = load_doc(data_dir + filename)
+                data = Utils.load_doc(data_dir + filename)
                 self.raw_captions.append(data)
                 
         print('Created dataset of ' + str(len(self)) + ' items from ' + data_dir)

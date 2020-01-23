@@ -14,61 +14,61 @@ import torch
 import torch.nn as nn
 import torchvision
 
-class pix2code(AModel):
-    def __init__(self, input_shape, output_size, output_path):
-        AModel.__init__(self, input_shape, output_size, output_path)
-        self.name = "pix2code"
+# class pix2code(AModel):
+#     def __init__(self, input_shape, output_size, output_path):
+#         AModel.__init__(self, input_shape, output_size, output_path)
+#         self.name = "pix2code"
 
-        print(self.input_shape, output_size) #(256, 256, 3) 19
+#         print(self.input_shape, output_size) #(256, 256, 3) 19
 
-        self.image_model = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=(3, 3), padding=0), #(32, 254, 254)
-            nn.ReLU(),
-            nn.Conv2d(32, 32, kernel_size=(3, 3), padding=0), #(32, 252, 252)
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(2, 2)), #(32, 126, 126)
-            nn.Dropout(0.25), #(32, 126, 126)
+#         self.image_model = nn.Sequential(
+#             nn.Conv2d(3, 32, kernel_size=(3, 3), padding=0), #(32, 254, 254)
+#             nn.ReLU(),
+#             nn.Conv2d(32, 32, kernel_size=(3, 3), padding=0), #(32, 252, 252)
+#             nn.ReLU(),
+#             nn.MaxPool2d(kernel_size=(2, 2)), #(32, 126, 126)
+#             nn.Dropout(0.25), #(32, 126, 126)
 
-            nn.Conv2d(32, 64, kernel_size=(3, 3), padding=0), #(64, 124, 124)
-            nn.ReLU(),
-            nn.Conv2d(64, 64, kernel_size=(3, 3), padding=0), #(64, 122, 122)
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(2, 2)), #(64, 61, 61)
-            nn.Dropout(0.25), #(64, 61, 61)
+#             nn.Conv2d(32, 64, kernel_size=(3, 3), padding=0), #(64, 124, 124)
+#             nn.ReLU(),
+#             nn.Conv2d(64, 64, kernel_size=(3, 3), padding=0), #(64, 122, 122)
+#             nn.ReLU(),
+#             nn.MaxPool2d(kernel_size=(2, 2)), #(64, 61, 61)
+#             nn.Dropout(0.25), #(64, 61, 61)
 
-            nn.Conv2d(64, 128, kernel_size=(3, 3), padding=0), #(128, 59, 59)
-            nn.ReLU(),
-            nn.Conv2d(128, 128, kernel_size=(3, 3), padding=0), #(128, 57, 57)
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(2, 2)), #(128, 28, 28)
-            nn.Dropout(0.25), #(128, 28, 28)
+#             nn.Conv2d(64, 128, kernel_size=(3, 3), padding=0), #(128, 59, 59)
+#             nn.ReLU(),
+#             nn.Conv2d(128, 128, kernel_size=(3, 3), padding=0), #(128, 57, 57)
+#             nn.ReLU(),
+#             nn.MaxPool2d(kernel_size=(2, 2)), #(128, 28, 28)
+#             nn.Dropout(0.25), #(128, 28, 28)
 
-            nn.Flatten(), #(128*28*28=100352)
-            nn.Linear(128*28*28, 1024),
-            nn.ReLU(),
-            nn.Dropout(0.3),
-            nn.Linear(1024, 1024),
-            nn.ReLU(),
-            nn.Dropout(0.3),
+#             nn.Flatten(), #(128*28*28=100352)
+#             nn.Linear(128*28*28, 1024),
+#             nn.ReLU(),
+#             nn.Dropout(0.3),
+#             nn.Linear(1024, 1024),
+#             nn.ReLU(),
+#             nn.Dropout(0.3),
 
-            # nn.RepeatVector(CONTEXT_LENGTH)
-        )
+#             # nn.RepeatVector(CONTEXT_LENGTH)
+#         )
 
-        # visual_input = Input(shape=input_shape)
-        # encoded_image = image_model(visual_input)
+#         # visual_input = Input(shape=input_shape)
+#         # encoded_image = image_model(visual_input)
 
-        self.language_model = nn.Sequential(
-            nn.LSTM(input_size=(CONTEXT_LENGTH, output_size), hidden_size=128),
-            nn.LSTM(input_size=128, hidden_size=128)
-        )
+#         self.language_model = nn.Sequential(
+#             nn.LSTM(input_size=(CONTEXT_LENGTH, output_size), hidden_size=128),
+#             nn.LSTM(input_size=128, hidden_size=128)
+#         )
 
-        # textual_input = Input(shape=(CONTEXT_LENGTH, output_size))
-        # encoded_text = language_model(textual_input)
+#         # textual_input = Input(shape=(CONTEXT_LENGTH, output_size))
+#         # encoded_text = language_model(textual_input)
 
-        self.decoder = nn.Sequential(
-            nn.LSTM(input_size=(CONTEXT_LENGTH, output_size), hidden_size=512),
-            nn.LSTM(input_size=512, hidden_size=512)
-        )
+#         self.decoder = nn.Sequential(
+#             nn.LSTM(input_size=(CONTEXT_LENGTH, output_size), hidden_size=512),
+#             nn.LSTM(input_size=512, hidden_size=512)
+#         )
 
         # decoder = concatenate([encoded_image, encoded_text])
 
@@ -150,7 +150,7 @@ class EncoderCNN (nn.Module):
         super(EncoderCNN, self).__init__()
         
         # Load pretrained resnet model
-        resnet = models.resnet152(pretrained = True)
+        resnet = torchvision.models.resnet152(pretrained = True)
         
         # Remove the fully connected layers
         modules = list(resnet.children())[:-1]

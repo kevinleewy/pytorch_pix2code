@@ -18,45 +18,39 @@ from torchvision import datasets, models, transforms
 from tqdm import tqdm
 from PIL import Image
 
-from classes.dataset.ImageHTMLDataSet import *
+from classes.dataset.ImageDataset import *
 from classes.model.pix2code import *
 
-from .Utils import *
-
-
-# Hyperparams
-batch_size = 32
-embed_size = 256
-num_epochs = 1000
-learning_rate = 0.005
-hidden_size = 512
-num_layers = 2
-
-# Other params
-shuffle = True
-num_workers = 2
-
-# Vocab
-START_TOKEN = '<START>'
-END_TOKEN = '<END>'
-
-# Logging/Saving Variables
-save_after_x_epochs = 10
-log_step = 5
-
-# Paths
-data_dir = './datasets/web/training_set/' # For testing purposes, we use a pre-split dataset rather than do it here
-dev_data_dir = './datasets/web/eval_set/'
-model_path = '/content/gdrive/My Drive/colab/pix2code/weights'
-vocab_path = '/content/gdrive/My Drive/colab/pix2code/bootstrap.vocab'
-
-# DO NOT CHANGE:
-crop_size = 224 # Required by resnet152
+from classes.Utils import *
 
 def main():
 
+    # Model Hyperparams
+    embed_size = 512
+    learning_rate = 0.001
+    hidden_size = 512
+    num_layers = 1
+
+    # Other params
+    shuffle = True
+    num_workers = 2
+
+    # Logging/Saving Variables
+    save_after_x_epochs = 10
+    log_step = 5
+
+    # Paths
+    data_dir = '../datasets/web/training_set/' # For testing purposes, we use a pre-split dataset rather than do it here
+    dev_data_dir = '../datasets/web/eval_set/'
+
+    # DO NOT CHANGE:
+    crop_size = 224 # Required by resnet152
+
+    #Determine device
+    device = Utils.get_device()
+
     # Load vocabulary
-    vocab = build_vocab(vocab_path)
+    vocab = Utils.build_vocab(opt.vocab)
 
     vocab_size = len(vocab)
 
@@ -90,23 +84,30 @@ def main():
     ])
 
     # Create data loaders
-    img_html_dataset = ImageHTMLDataSet(data_dir=data_dir, vocab=vocab, transform=transform)
+    img_html_dataset = ImageDataset(data_dir=data_dir, vocab=vocab, transform=transform)
     data_loader = DataLoader(dataset=img_html_dataset,
-                            batch_size=batch_size,
+                            batch_size=opt.batch_size,
                             shuffle=shuffle,
                             num_workers=num_workers,
                             collate_fn=collate_fn)
 
-    dev_img_html_dataset = ImageHTMLDataSet(data_dir=dev_data_dir, vocab=vocab, transform=transform)
+    dev_img_html_dataset = ImageDataset(data_dir=dev_data_dir, vocab=vocab, transform=transform)
     dev_data_loader = DataLoader(dataset=dev_img_html_dataset,
-                            batch_size=batch_size,
+                            batch_size=opt.batch_size,
                             shuffle=shuffle,
                             num_workers=num_workers,
                             collate_fn=collate_fn)         
 
+    #Load data from checkpoint
+    checkpoint = None
+    if opt.weights != '':
+        checkpoint = torch.load(opt.weights, map_location=device)
+        if 'hyp' in checkpoint:
+            embed_size = checkpoint['hyp']['embed_size']
+            hidden_size = checkpoint['hyp']['hidden_size']
+            num_layers = checkpoint['hyp']['num_layers']
+            assert vocab_size == checkpoint['hyp']['num_layers'], 'incompatible vocab_size'
 
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print('Device:', device)
 
     encoder = EncoderCNN(embed_size).to(device)
     decoder = DecoderRNN(embed_size, hidden_size, vocab_size, num_layers).to(device)
@@ -119,20 +120,14 @@ def main():
     best_bleu = 0.0
     # best_bleu = 0.5598234212490967
 
-    #Load from checkpoint
-    LOAD_CHECKPOINT = False
-    RESUME_TRAINING = True
-    model_name = 'best.pkl'
-    if LOAD_CHECKPOINT:
-        checkpoint_path = os.path.join(model_path, model_name)
-        checkpoint = torch.load(checkpoint_path, map_location=device)
-
+    #Load model weights from checkpoint
+    if checkpoint:
         # Load trained models
         encoder.load_state_dict(checkpoint['encoder'], strict=True)
         decoder.load_state_dict(checkpoint['decoder'], strict=True)
 
         # Load optimizer
-        if RESUME_TRAINING:
+        if opt.resume:
             if checkpoint['epoch']:
                 start_epoch = checkpoint['epoch'] + 1
             if checkpoint['best_bleu']:
@@ -142,7 +137,7 @@ def main():
 
     batch_count = len(data_loader)
 
-    for epoch in range(start_epoch, num_epochs):
+    for epoch in range(start_epoch, opt.num_epochs):
         encoder.train()
         decoder.train()
         with tqdm(enumerate(data_loader), total=batch_count, position=0, leave=True) as pbar: # progress bar
@@ -175,14 +170,14 @@ def main():
 
                 optimizer.step()
 
-                s = ('%10s Loss: %.4f, Perplexity: %5.4f') % ('%g/%g' % (epoch, num_epochs - 1), loss.item(), np.exp(loss.item()))
+                s = ('%10s Loss: %.4f, Perplexity: %5.4f') % ('%g/%g' % (epoch, opt.num_epochs - 1), loss.item(), np.exp(loss.item()))
                 pbar.set_description(s)
 
         # end batch ------------------------------------------------------------------------------------------------
 
         # Calculate BLEU score
         with torch.no_grad():
-            bleu, _ = eval_bleu_score(encoder, decoder, dev_data_loader, device)
+            bleu, _ = Utils.eval_bleu_score(encoder, decoder, dev_data_loader, vocab, device)
             print('BLEU score: ', bleu)
             if(bleu > best_bleu):
                 best_bleu = bleu
@@ -193,21 +188,27 @@ def main():
             'encoder': encoder.state_dict(),
             'decoder': decoder.state_dict(),
             'optimizer': optimizer.state_dict(),
-            'best_bleu': best_bleu
+            'best_bleu': best_bleu,
+            'hyp': {
+                'embed_size': embed_size,
+                'hidden_size': hidden_size,
+                'num_layers': num_layers,
+                'vocab_size': vocab_size
+            }
         }
 
         # Save last checkpoint
-        torch.save(checkpoint, os.path.join(model_path, 'last.pkl'))
+        torch.save(checkpoint, os.path.join(opt.out_dir, 'last.pkl'))
 
         # Save best checkpoint
         if bleu == best_bleu:
-            torch.save(checkpoint, os.path.join(model_path, 'best.pkl'))
+            torch.save(checkpoint, os.path.join(opt.out_dir, 'best.pkl'))
 
         # Save backup every 10 epochs (optional)
         if (epoch + 1) % save_after_x_epochs == 0:
             # Save our models
             print('!!! saving models at epoch: ' + str(epoch))
-            torch.save(checkpoint, os.path.join(model_path, 'checkpoint-%d-%d.pkl' %(epoch+1, 1)))             
+            torch.save(checkpoint, os.path.join(opt.out_dir, 'checkpoint-%d-%d.pkl' %(epoch+1, 1)))             
 
         # Delete checkpoint
         del checkpoint
@@ -217,8 +218,10 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--out-dir', '-o', type=str, required=True, help='output path for saving model weights')
-    parser.add_argument('--config', '--cfg', '-c', type=str, required=True, help='*-config.json path')
-    parser.add_argument('--load', type=str, help='weights file to preload the model with')
+    parser.add_argument('--vocab', '-v', type=str, required=False, default='../bootstrap.vocab', help='*-config.json path')
+    parser.add_argument('--weights', '-w', type=str, required=False, default='', help='weights to preload into model')
+    parser.add_argument('--num-epochs', type=int, required=False, default=400, help='number of epochs')
+    parser.add_argument('--batch-size', type=int, required=False, default=16, help='batch size')
     parser.add_argument('--resume', action='store_true', help='resume training')
     opt = parser.parse_args()
     main()
