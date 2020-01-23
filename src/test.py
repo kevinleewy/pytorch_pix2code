@@ -24,32 +24,32 @@ from classes.model.pix2code import *
 from classes.Utils import *
 
 
-# Hyperparams
-batch_size = 32
-embed_size = 256
-num_epochs = 1000
-learning_rate = 0.005
-hidden_size = 512
-num_layers = 2
-
-# Other params
-shuffle = True
-num_workers = 2
-
-# Logging/Saving Variables
-save_after_x_epochs = 10
-log_step = 5
-
-# Paths
-data_dir = '../datasets/web/training_set/' # For testing purposes, we use a pre-split dataset rather than do it here
-dev_data_dir = '../datasets/web/eval_set/'
-model_path = '../weights'
-vocab_path = '../bootstrap.vocab'
-
-# DO NOT CHANGE:
-crop_size = 224 # Required by resnet152
-
 def main():
+
+    # Hyperparams
+    batch_size = 32
+    embed_size = 256
+    num_epochs = 1000
+    learning_rate = 0.005
+    hidden_size = 512
+    num_layers = 2
+
+    # Other params
+    shuffle = True
+    num_workers = 2
+
+    # Logging/Saving Variables
+    save_after_x_epochs = 10
+    log_step = 5
+
+    # Paths
+    data_dir = '../datasets/web/training_set/' # For testing purposes, we use a pre-split dataset rather than do it here
+    dev_data_dir = '../datasets/web/eval_set/'
+    model_path = '../weights'
+    vocab_path = '../bootstrap.vocab'
+
+    # DO NOT CHANGE:
+    crop_size = 224 # Required by resnet152
 
     # Load vocabulary
     vocab = build_vocab(vocab_path)

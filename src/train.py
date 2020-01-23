@@ -118,7 +118,6 @@ def main():
 
     start_epoch = 0
     best_bleu = 0.0
-    # best_bleu = 0.5598234212490967
 
     #Load model weights from checkpoint
     if checkpoint:
