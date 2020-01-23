@@ -140,7 +140,7 @@ def main():
     for epoch in range(start_epoch, opt.num_epochs):
         encoder.train()
         decoder.train()
-        with tqdm(enumerate(data_loader), total=batch_count, position=0, leave=True) as pbar: # progress bar
+        with tqdm(enumerate(data_loader), total=batch_count) as pbar: # progress bar
             for i, (images, captions, lengths) in pbar:
                 # Shape: torch.Size([batch_size, 3, crop_size, crop_size])
                 images = Variable(images.to(device))
