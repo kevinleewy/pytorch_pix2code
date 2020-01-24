@@ -3,6 +3,7 @@ __author__ = 'Kevin Lee - kevin_lee@claris.com'
 from nltk.translate.bleu_score import corpus_bleu
 import numpy as np
 import torch
+from torch.autograd import Variable
 from .Vocabulary import *
 
 class Utils:
@@ -117,8 +118,8 @@ class Utils:
             predicted.append(sampled_ids)
             actual.append(caption.numpy())
 
-        predicted = [transform_idx_to_words(vocab, item) for item in predicted]
-        actual = [[transform_idx_to_words(vocab, item)] for item in actual]
+        predicted = [Utils.transform_idx_to_words(vocab, item) for item in predicted]
+        actual = [[Utils.transform_idx_to_words(vocab, item)] for item in actual]
         
         bleu = corpus_bleu(actual, predicted)
 

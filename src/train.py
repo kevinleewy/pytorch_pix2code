@@ -106,7 +106,7 @@ def main():
             embed_size = checkpoint['hyp']['embed_size']
             hidden_size = checkpoint['hyp']['hidden_size']
             num_layers = checkpoint['hyp']['num_layers']
-            assert vocab_size == checkpoint['hyp']['num_layers'], 'incompatible vocab_size'
+            assert vocab_size == checkpoint['hyp']['vocab_size'], 'incompatible vocab_sizes {} and {}'.format(vocab_size, checkpoint['hyp']['vocab_size'])
 
 
     encoder = EncoderCNN(embed_size).to(device)
@@ -195,6 +195,9 @@ def main():
                 'vocab_size': vocab_size
             }
         }
+
+        if not os.path.exists(opt.out_dir):
+            os.makedirs(opt.out_dir)
 
         # Save last checkpoint
         torch.save(checkpoint, os.path.join(opt.out_dir, 'last.pkl'))

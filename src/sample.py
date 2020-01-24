@@ -110,7 +110,7 @@ def main():
     sampled_ids = decoder.sample(features)
     sampled_ids = sampled_ids.cpu().data.numpy()
 
-    predicted = transform_idx_to_words(sampled_ids)
+    predicted = Utils.transform_idx_to_words(sampled_ids)
 
     predicted = ''.join(predicted)
     predicted = predicted.replace('{', "{\n").replace('}', "\n}\n").replace('}\n\n}', "}\n}")
