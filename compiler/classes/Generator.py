@@ -32,7 +32,10 @@ class Generator:
                 childrenSample.append(self.sample(root=child['id']))
                 currentWeight += child['weight']
             
-        childrenSample = ', '.join(childrenSample)
+        if len(childrenSample) > 0:
+            childrenSample = ', '.join(childrenSample)
+        else:
+            childrenSample = ''
 
         if root is 'body':
             return childrenSample.replace('}, ', '}\n')

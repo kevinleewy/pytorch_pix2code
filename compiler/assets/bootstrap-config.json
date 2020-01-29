@@ -1,0 +1,411 @@
+{
+    "opening-tag": "{",
+    "closing-tag": "}",
+    "elements": [
+        {
+            "id": "body",
+            "dsl": {
+				"android":"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<LinearLayout\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/container\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:orientation=\"vertical\"\n    tools:context=\"com.tonybeltramelli.android_gui.MainActivity\">\n    {}\n</LinearLayout>\n",
+				"ios":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB\" version=\"3.0\" toolsVersion=\"11201\" systemVersion=\"15G1217\" targetRuntime=\"iOS.CocoaTouch\" propertyAccessControl=\"none\" useAutolayout=\"YES\" useTraitCollections=\"YES\" colorMatched=\"YES\">\n    <dependencies>\n        <deployment identifier=\"iOS\"/>\n        <plugIn identifier=\"com.apple.InterfaceBuilder.IBCocoaTouchPlugin\" version=\"11161\"/>\n        <capability name=\"documents saved in the Xcode 8 format\" minToolsVersion=\"8.0\"/>\n    </dependencies>\n    <scenes>\n        <!--View Controller-->\n        <scene sceneID=\"qAw-JF-viq\">\n            <objects>\n                <viewController id=\"[ID]\" sceneMemberID=\"viewController\">\n                    <layoutGuides>\n                        <viewControllerLayoutGuide type=\"top\" id=\"[ID]\"/>\n                        <viewControllerLayoutGuide type=\"bottom\" id=\"[ID]\"/>\n                    </layoutGuides>\n                    <view key=\"view\" contentMode=\"center\" id=\"[ID]\">\n                        <rect key=\"frame\" x=\"0.0\" y=\"0.0\" width=\"375\" height=\"667\"/>\n                        <autoresizingMask key=\"autoresizingMask\" widthSizable=\"YES\" heightSizable=\"YES\"/>\n                        <subviews>\n                          {}\n                        </subviews>\n                        <color key=\"backgroundColor\" white=\"1\" alpha=\"1\" colorSpace=\"calibratedWhite\"/>\n                    </view>\n                </viewController>\n                <placeholder placeholderIdentifier=\"IBFirstResponder\" id=\"[ID]\" userLabel=\"First Responder\" sceneMemberID=\"firstResponder\"/>\n            </objects>\n            <point key=\"canvasLocation\" x=\"20\" y=\"95.802098950524751\"/>\n        </scene>\n    </scenes>\n</document>\n",
+				"web": "<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <script src=\"https://code.jquery.com/jquery-3.4.1.min.js\"integrity=\"sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=\"crossorigin=\"anonymous\"></script>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh\" crossorigin=\"anonymous\">\n    <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js\" integrity=\"sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6\" crossorigin=\"anonymous\"></script>\n    <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js\" integrity=\"sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm\" crossorigin=\"anonymous\"></script>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"assets/styles.css\">\n    <title>Claris Pix2Code</title>\n  </head>\n  <body>\n    <main class=\"container\">\n      <div class=\"fm-global-width\">\n            {}\n        </div>\n    <footer class=\"footer footer-background\">\n        <div class=\"fm-global-width\">\n            <div class=\"row pt-5 no-gutters\">\n                <div class=\"col-12\" id=\"copyright-info\">Copyright &copy; 2020 Claris International Inc. All rights reserved.</div>\n            </div>\n            <hr>\n        </div>\n     </footer>\n    </main>\n  </body>\n</html>\n"
+            },
+            "children_groups": [
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "nav",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 3,
+                    "children": [
+                        {
+                            "id": "card-deck",
+                            "weight": 1
+                        },
+                        {
+                            "id": "row",
+                            "weight": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "nav",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<nav class=\"navbar navbar-expand navbar-light\">\n    <div class=\"nav navbar-nav\" role=\"tablist\">\n        {}\n    </div>\n    </nav>\n"
+            },
+            "children_groups": [
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "nav-selected",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 5,
+                    "children": [
+                        {
+                            "id": "nav-unselected",
+                            "weight": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "nav-selected",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<a class=\"nav-item nav-link active\" data-toggle=\"tab\" href=\"#\" role=\"tab\" aria-selected=\"true\">[]</a>\n"
+            },
+            "children_groups": []
+        },
+        {
+            "id": "nav-unselected",
+            "dsl": {
+				"android":"",
+				"ios":"",
+				"web": "<a class=\"nav-item nav-link\" data-toggle=\"tab\" href=\"#\" role=\"tab\" aria-selected=\"false\">[]</a>\n"
+            },
+            "children_groups": []
+        },
+        {
+            "id": "row",
+            "children_groups": [
+                {
+                    "min_weight": 6,
+                    "max_weight": 12,
+                    "children": [
+                        {
+                            "id": "column-single",
+                            "weight": 12
+                        },
+                        {
+                            "id": "column-double",
+                            "weight": 6
+                        },
+                        {
+                            "id": "column-triple",
+                            "weight": 4
+                        },
+                        {
+                            "id": "column-quadruple",
+                            "weight": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "column-single",
+            "children_groups": [
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "title-large",
+                            "weight": 1
+                        },
+                        {
+                            "id": "title-medium",
+                            "weight": 1
+                        },
+                        {
+                            "id": "title-small",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "text",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "button-blue",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-cyan",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-green",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-orange",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-red",
+                            "weight": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "column-double",
+            "children_groups": [
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "title-large",
+                            "weight": 1
+                        },
+                        {
+                            "id": "title-medium",
+                            "weight": 1
+                        },
+                        {
+                            "id": "title-small",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "text",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "button-blue",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-cyan",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-green",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-orange",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-red",
+                            "weight": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "column-triple",
+            "children_groups": [
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "title-large",
+                            "weight": 1
+                        },
+                        {
+                            "id": "title-medium",
+                            "weight": 1
+                        },
+                        {
+                            "id": "title-small",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "text",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "button-blue",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-cyan",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-green",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-orange",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-red",
+                            "weight": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "column-quadruple",
+            "children_groups": [
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "title-large",
+                            "weight": 1
+                        },
+                        {
+                            "id": "title-medium",
+                            "weight": 1
+                        },
+                        {
+                            "id": "title-small",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "text",
+                            "weight": 1
+                        }
+                    ]
+                },
+                {
+                    "min_weight": 1,
+                    "max_weight": 1,
+                    "children": [
+                        {
+                            "id": "button-blue",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-cyan",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-green",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-orange",
+                            "weight": 1
+                        },
+                        {
+                            "id": "button-red",
+                            "weight": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "card-deck",
+            "children_groups": [
+                {
+                    "min_weight": 1,
+                    "max_weight": 4,
+                    "children": [
+                        {
+                            "id": "card",
+                            "weight": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "card",
+            "children_groups": []
+        },
+        {
+            "id": "button-blue",
+            "children_groups": []
+        },
+        {
+            "id": "button-cyan",
+            "children_groups": []
+        },
+        {
+            "id": "button-green",
+            "children_groups": []
+        },
+        {
+            "id": "button-orange",
+            "children_groups": []
+        },
+        {
+            "id": "button-red",
+            "children_groups": []
+        },
+        {
+            "id": "title-large",
+            "children_groups": []
+        },
+        {
+            "id": "title-medium",
+            "children_groups": []
+        },
+        {
+            "id": "title-small",
+            "children_groups": []
+        },
+        {
+            "id": "text",
+            "children_groups": [],
+            "random_text_config": {
+                "length_text": 56,
+                "space_number": 7,
+                "with_upper_case": false
+            }
+        }
+    ]
+}

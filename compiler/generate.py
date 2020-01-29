@@ -3,7 +3,7 @@ from __future__ import print_function
 __author__ = 'Kevin Lee - kevin_lee@claris.com'
 
 import argparse
-import imgkit
+import asyncio
 import hashlib
 import json
 import numpy as np
@@ -15,12 +15,13 @@ from classes.Compiler import *
 from classes.Generator import *
 from classes.Utils import *
 from compile import compile
+from pyppeteer import launch
 from tqdm import tqdm
 
 TRAINING_SET_NAME = "training_set"
 EVALUATION_SET_NAME = "eval_set"
 
-def generate(path, count, compiler, generator, hashes, css):
+async def generate(path, count, compiler, generator, hashes, css, page):
     
     i = 0
     collisions = 0
@@ -30,8 +31,9 @@ def generate(path, count, compiler, generator, hashes, css):
     if not os.path.exists(assets_path):
         os.makedirs(assets_path)
 
-    #Copy CSS file
+    #Copy assets
     shutil.copyfile(css, os.path.join(assets_path, 'styles.css'))
+    # shutil.copyfile(css, os.path.join(assets_path, 'styles.css'))
 
     #Generate samples
     with tqdm(total=count) as pbar:
@@ -51,24 +53,28 @@ def generate(path, count, compiler, generator, hashes, css):
             with open(input_file_path, 'w') as f:
                 f.write(sample)
 
-            compiled_file_path = compile(compiler, input_file_path, '[]', opt.domain)
+            compiled_file_path = compile(compiler, input_file_path, r'\[\]', opt.domain)
 
-            options = {
-                'format': 'png',
-                'quality': 10,
-                'quiet': '',
-                'width': 1500
-            }
-
-            imgkit.from_file(compiled_file_path, output_file_path, options=options)
-            os.remove(compiled_file_path)
+            # Capture screenshot
+            await page.goto('file://' + os.path.abspath(compiled_file_path))
+            await page.screenshot(
+                {
+                    'path' : output_file_path,
+                    'type' : 'png',
+                    'fullPage' : True
+                }
+            )
+            
+            # Remove HTML file
+            if not opt.keep_compiled:
+                os.remove(compiled_file_path)
 
             i += 1
             pbar.update(1)
 
     return i, collisions        
 
-def main():
+async def main():
 
     if opt.seed:
         np.random.seed(opt.seed)
@@ -81,13 +87,22 @@ def main():
     train_dir = os.path.join(opt.out_dir, opt.domain, TRAINING_SET_NAME)
     eval_dir = os.path.join(opt.out_dir, opt.domain, EVALUATION_SET_NAME)
 
+    browser = await launch()
+    page = await browser.newPage()
+    await page.setViewport({
+        'width': 1920,
+        'height': 1080,
+    })
+
     #Generate training set
-    train_count, train_collisions = generate(train_dir, opt.num_train, compiler, generator, hashes, opt.css)
+    train_count, train_collisions = await generate(train_dir, opt.num_train, compiler, generator, hashes, opt.css, page)
     print('Finished generating {} training data. {} collisions.'.format(train_count, train_collisions))
 
     #Generate eval set
-    eval_count, eval_collisions = generate(eval_dir, opt.num_eval, compiler, generator, hashes, opt.css)
+    eval_count, eval_collisions = await generate(eval_dir, opt.num_eval, compiler, generator, hashes, opt.css, page)
     print('Finished generating {} eval data. {} collisions.'.format(eval_count, eval_collisions))
+
+    await browser.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -98,5 +113,6 @@ if __name__ == '__main__':
     parser.add_argument('--num-eval', type=int, default=1000, help='number of gui files to generate for the test set')
     parser.add_argument('--domain', '-d', type=str, choices=['android', 'ios', 'web'], default='web', help='web, android or ios')
     parser.add_argument('--seed', type=int, default=1234, help='RNG seed')
+    parser.add_argument('--keep-compiled', action='store_true', help='preserve compiled file (.storyboard, .html, etc.)')
     opt = parser.parse_args()
-    main()
+    asyncio.get_event_loop().run_until_complete(main())

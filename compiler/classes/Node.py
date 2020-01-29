@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
+import os
+dirname = os.path.dirname(__file__)
 __author__ = 'Kevin Lee - kevin_lee@claris.com'
 
 
@@ -23,9 +25,16 @@ class Node:
         for child in self.children:
             content += child.render(mapping, rendering_function)
 
-        value = mapping[self.key]['dsl'][domain]
+        # value = mapping[self.key]['dsl'][domain]
+        value = ""
+        with open(os.path.join(dirname, '../templates/{}/{}.html'.format(domain, self.key))) as f:
+            value = f.read()
+
         if rendering_function is not None:
-            value = rendering_function(self.key, value)
+            cfg = {}
+            if 'random_text_config' in mapping[self.key]:
+                cfg = mapping[self.key]['random_text_config']
+            value = rendering_function(self.key, value, cfg)
 
         if len(self.children) != 0:
             value = value.replace(self.content_holder, content)
