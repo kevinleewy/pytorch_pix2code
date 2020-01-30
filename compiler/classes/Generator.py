@@ -5,6 +5,21 @@ import json
 import random
 # from classes.Node import *
 
+def getEligibleChildren(group, weightBudget, prevChildId):
+    eligibleChildren = []
+    for child in group['children']:
+
+        #Retrieve config values from group, otherwise use default values
+        weight = child['weight'] if 'weight' in child else 1
+        allowConsecutive = child['allow_consecutive'] if 'allow_consecutive' in child else True
+
+        if weight > weightBudget:
+            continue
+        if (not allowConsecutive) and (child['id'] == prevChildId):
+            continue
+        eligibleChildren.append(child)
+    return eligibleChildren
+
 class Generator:
     def __init__(self, config_path, terminate_prob=0.2):
 
@@ -25,12 +40,15 @@ class Generator:
 
         for group in elem['children_groups']:
             currentWeight = 0
+            prevChildId = None
             while currentWeight < group['min_weight'] or random.random() > self.terminate_prob:
-                child = random.choice(group['children'])
-                if currentWeight + child['weight'] > group['max_weight']:
-                    continue
-                childrenSample.append(self.sample(root=child['id']))
-                currentWeight += child['weight']
+
+                eligibleChildren = getEligibleChildren(group, group['max_weight'] - currentWeight, prevChildId)
+                if len(eligibleChildren) > 0:
+                    child = random.choice(eligibleChildren)
+                    childrenSample.append(self.sample(root=child['id']))
+                    currentWeight += child['weight']
+                    prevChildId = child['id']
             
         if len(childrenSample) > 0:
             childrenSample = ', '.join(childrenSample)

@@ -33,7 +33,6 @@ async def generate(path, count, compiler, generator, hashes, css, page):
 
     #Copy assets
     shutil.copyfile(css, os.path.join(assets_path, 'styles.css'))
-    # shutil.copyfile(css, os.path.join(assets_path, 'styles.css'))
 
     #Generate samples
     with tqdm(total=count) as pbar:

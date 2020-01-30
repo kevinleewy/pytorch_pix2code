@@ -16,26 +16,27 @@ class Compiler:
         self.elements = { v['id'] : v for v in self.config["elements"] }
 
     def compile(self, input_file_path, output_file_path, rendering_function=None, domain='web'):
-        dsl_file = open(input_file_path)
-        self.root = Node("body", None, self.content_holder)
-        current_parent = self.root
+        
+        with open(input_file_path, 'r') as input_file:
+            self.root = Node("body", None, self.content_holder)
+            current_parent = self.root
 
-        for token in dsl_file:
-            token = token.replace(" ", "").replace("\n", "")
+            for line in input_file:
+                line = line.replace(" ", "").replace("\n", "")
+                tokens = line.split(",")
 
-            if token.find(self.opening_tag) != -1:
-                token = token.replace(self.opening_tag, "")
+                for token in tokens:
+                    if token.find(self.opening_tag) != -1:
+                        token = token.replace(self.opening_tag, "")
 
-                element = Node(token, current_parent, self.content_holder)
-                current_parent.add_child(element)
-                current_parent = element
-            elif token.find(self.closing_tag) != -1:
-                current_parent = current_parent.parent
-            else:
-                tokens = token.split(",")
-                for t in tokens:
-                    element = Node(t, current_parent, self.content_holder)
-                    current_parent.add_child(element)
+                        element = Node(token, current_parent, self.content_holder)
+                        current_parent.add_child(element)
+                        current_parent = element
+                    elif token.find(self.closing_tag) != -1:
+                        current_parent = current_parent.parent
+                    else:
+                        element = Node(token, current_parent, self.content_holder)
+                        current_parent.add_child(element)
 
         output_html = self.root.render(self.elements, rendering_function=rendering_function, domain='web')
         with open(output_file_path, 'w') as output_file:
