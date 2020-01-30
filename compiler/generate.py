@@ -16,7 +16,6 @@ from classes.Generator import *
 from classes.Utils import *
 from compile import compile
 from pyppeteer import launch
-import pyppeteer.errors.BrowserError as BrowserError
 from tqdm import tqdm
 
 TRAINING_SET_NAME = "training_set"
@@ -89,7 +88,8 @@ async def main():
 
     try:
         browser = await launch({'headless': opt.headless})
-    except BrowserError:
+    except Exception as e:
+        print(e)
         browser = await launch(executablePath="/usr/lib/chromium-browser/chromium-browser", headless=opt.headless, args=['--no-sandbox'])
 
     page = await browser.newPage()
