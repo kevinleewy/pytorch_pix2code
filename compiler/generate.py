@@ -90,7 +90,7 @@ async def main():
     try:
         browser = await launch({'headless': opt.headless})
     except BrowserError:
-        browser = await launch(executablePath="/usr/lib/chromium-browser/chromium-browser", headless=opt.headless, args=['--no-sandbox']
+        browser = await launch(executablePath="/usr/lib/chromium-browser/chromium-browser", headless=opt.headless, args=['--no-sandbox'])
 
     page = await browser.newPage()
     await page.setViewport({
