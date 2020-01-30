@@ -88,11 +88,6 @@
         },
         {
             "id": "nav",
-            "dsl": {
-				"android":"",
-				"ios":"",
-				"web": "<nav class=\"navbar navbar-expand navbar-light\">\n    <div class=\"nav navbar-nav\" role=\"tablist\">\n        {}\n    </div>\n    </nav>\n"
-            },
             "children_groups": [
                 {
                     "min_weight": 1,
@@ -118,21 +113,23 @@
         },
         {
             "id": "nav-selected",
-            "dsl": {
-				"android":"",
-				"ios":"",
-				"web": "<a class=\"nav-item nav-link active\" data-toggle=\"tab\" href=\"#\" role=\"tab\" aria-selected=\"true\">[]</a>\n"
-            },
-            "children_groups": []
+            "children_groups": [],
+            "random_text_config": {
+                "max_text_length": 6,
+                "min_word_length": 4,
+                "max_word_length": 6,
+                "with_upper_case": true
+            }
         },
         {
             "id": "nav-unselected",
-            "dsl": {
-				"android":"",
-				"ios":"",
-				"web": "<a class=\"nav-item nav-link\" data-toggle=\"tab\" href=\"#\" role=\"tab\" aria-selected=\"false\">[]</a>\n"
-            },
-            "children_groups": []
+            "children_groups": [],
+            "random_text_config": {
+                "max_text_length": 6,
+                "min_word_length": 4,
+                "max_word_length": 6,
+                "with_upper_case": true
+            }
         },
         {
             "id": "row",
@@ -412,32 +409,37 @@
             "id": "title-large",
             "children_groups": [],
             "random_text_config": {
-                "length_text": 5,
-                "space_number": 0
+                "max_text_length": 6,
+                "min_word_length": 4,
+                "max_word_length": 6,
+                "with_upper_case": true
             }
         },
         {
             "id": "title-medium",
             "children_groups": [],
             "random_text_config": {
-                "length_text": 5,
-                "space_number": 0
+                "max_text_length": 6,
+                "min_word_length": 4,
+                "max_word_length": 6,
+                "with_upper_case": true
             }
         },
         {
             "id": "title-small",
             "children_groups": [],
             "random_text_config": {
-                "length_text": 5,
-                "space_number": 0
+                "max_text_length": 6,
+                "min_word_length": 4,
+                "max_word_length": 6,
+                "with_upper_case": true
             }
         },
         {
             "id": "text",
             "children_groups": [],
             "random_text_config": {
-                "length_text": 56,
-                "space_number": 7,
+                "max_text_length": 56,
                 "with_upper_case": false
             }
         },
@@ -445,25 +447,28 @@
             "id": "card-title",
             "children_groups": [],
             "random_text_config": {
-                "length_text": 5,
-                "space_number": 0
+                "max_text_length": 6,
+                "min_word_length": 4,
+                "max_word_length": 6,
+                "with_upper_case": true
             }
         },
         {
             "id": "card-subtitle",
             "children_groups": [],
             "random_text_config": {
-                "length_text": 5,
-                "space_number": 0
+                "max_text_length": 7,
+                "min_word_length": 2,
+                "max_word_length": 5,
+                "with_upper_case": false
             }
         },
         {
             "id": "card-text",
             "children_groups": [],
             "random_text_config": {
-                "length_text": 56,
-                "space_number": 7,
-                "with_upper_case": false
+                "max_text_length": 56,
+                "with_upper_case": true
             }
         }
     ]

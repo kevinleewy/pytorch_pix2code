@@ -86,7 +86,7 @@ async def main():
     train_dir = os.path.join(opt.out_dir, opt.domain, TRAINING_SET_NAME)
     eval_dir = os.path.join(opt.out_dir, opt.domain, EVALUATION_SET_NAME)
 
-    browser = await launch()
+    browser = await launch({'headless': opt.headless})
     page = await browser.newPage()
     await page.setViewport({
         'width': 1920,
@@ -113,5 +113,6 @@ if __name__ == '__main__':
     parser.add_argument('--domain', '-d', type=str, choices=['android', 'ios', 'web'], default='web', help='web, android or ios')
     parser.add_argument('--seed', type=int, default=1234, help='RNG seed')
     parser.add_argument('--keep-compiled', action='store_true', help='preserve compiled file (.storyboard, .html, etc.)')
+    parser.add_argument('--headless', type=bool, required=False, default=True, help='view screenshots in action')
     opt = parser.parse_args()
     asyncio.get_event_loop().run_until_complete(main())
