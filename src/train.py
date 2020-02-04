@@ -26,10 +26,10 @@ from classes.Utils import *
 def main():
 
     # Model Hyperparams
-    embed_size = 512
+    embed_size = 1024
     learning_rate = 0.001
     hidden_size = 512
-    num_layers = 1
+    num_layers = 2
 
     # Other params
     shuffle = True

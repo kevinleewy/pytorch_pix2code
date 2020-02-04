@@ -89,7 +89,10 @@ async def main():
     try:
         browser = await launch({'headless': opt.headless})
     except Exception as e:
-        print(e)
+        #For Google Colab
+        #Additional dependencies
+        # !pip install websockets==6.0 --force-reinstall
+        # !apt install chromium-chromedriver
         browser = await launch(executablePath="/usr/lib/chromium-browser/chromium-browser", headless=opt.headless, args=['--no-sandbox'])
 
     page = await browser.newPage()
