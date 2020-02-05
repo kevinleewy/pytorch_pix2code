@@ -117,6 +117,6 @@ class Pix2Code (nn.Module):
     def sample (self, image):
 
         features = self.encoder(image)
-        sampled_ids = decoder.sample(features)
+        sampled_ids = self.decoder.sample(features)
 
         return sampled_ids

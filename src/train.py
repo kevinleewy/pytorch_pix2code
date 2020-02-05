@@ -192,11 +192,13 @@ def main():
             if(bleu > best_bleu):
                 best_bleu = bleu
 
+        # Log results
+        with open(opt.log, 'a') as f:
+            f.write('{} {} BLEU: {}\n'.format(str(epoch), s, str(bleu)))
+
         # Create checkpoint
         checkpoint = {
             'epoch': epoch,
-            # 'encoder': encoder.state_dict(),
-            # 'decoder': decoder.state_dict(),
             'model': model.state_dict(),
             'optimizer': optimizer.state_dict(),
             'best_bleu': best_bleu,
@@ -239,6 +241,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch-size', type=int, required=False, default=16, help='batch size')
     parser.add_argument('--resume', action='store_true', help='resume training')
     parser.add_argument('--parallel', action='store_true', help='Multi-GPU training')
+    parser.add_argument('--log', type=str, required=False, default='train.log', help='path to log file')
     opt = parser.parse_args()
     main()
 
