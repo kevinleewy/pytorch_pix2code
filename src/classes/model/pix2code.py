@@ -84,13 +84,12 @@ class DecoderRNN (nn.Module):
         return outputs
     
     # Sample method used for testing our model
-    def sample (self, features, states=None):
+    def sample (self, features, states=None, num_iter=100):
         sampled_ids = []
         inputs = features.unsqueeze(1)
         
-        # Put the features input through our decoder for i iterations
-        # TODO: Put this range into a parameter?
-        for i in range(100):
+        # Put the features input through our decoder for n iterations
+        for i in range(num_iter):
             hiddens, states = self.lstm(inputs, states)
             outputs = self.linear(hiddens.squeeze(1))
             predicted = outputs.max(dim = 1, keepdim = True)[1]
@@ -110,26 +109,14 @@ class Pix2Code (nn.Module):
         self.decoder = DecoderRNN(embed_size, hidden_size, vocab_size, num_layers)
 
     def forward (self, images, captions, lengths):
-        features = encoder(images) # Outputs features of torch.Size([batch_size, embed_size])
-        outputs = decoder(features, captions, lengths)
+        features = self.encoder(images) # Outputs features of torch.Size([batch_size, embed_size])
+        outputs = self.decoder(features, captions, lengths)
         return outputs
 
     # Sample method used for testing our model
-    def sample (self, image, states=None, num_iter=100):
+    def sample (self, image):
 
-        sampled_ids = []
         features = self.encoder(image)
-        inputs = features.unsqueeze(1)
-        
-        # Put the features input through our decoder for n iterations
-        for i in range(num_iter):
-            hiddens, states = self.lstm(inputs, states)
-            outputs = self.linear(hiddens.squeeze(1))
-            predicted = outputs.max(dim = 1, keepdim = True)[1]
-            sampled_ids.append(predicted)
-            inputs = self.embed(predicted)
-            inputs = inputs.view(-1, 1, self.embed_size)
+        sampled_ids = decoder.sample(features)
 
-        sampled_ids = torch.cat(sampled_ids, 1)
-
-        return sampled_ids.squeeze()    
+        return sampled_ids
