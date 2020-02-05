@@ -118,7 +118,7 @@ def main():
     if torch.cuda.device_count() > 1:
         # encoder = nn.DataParallel(encoder)
         # decoder = nn.DataParallel(decoder)
-        model = nn.DataParallel(model)
+        model = nn.DataParallel(model, [0, 1])
 
     #Convert device
     # encoder = encoder.to(device)
@@ -126,8 +126,9 @@ def main():
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
-    params = list(decoder.parameters()) + list(encoder.linear.parameters()) + list(encoder.bn.parameters())
-    optimizer = torch.optim.Adam(params, lr = learning_rate)
+    # params = list(decoder.parameters()) + list(encoder.linear.parameters()) + list(encoder.bn.parameters())
+    # optimizer = torch.optim.Adam(params, lr = learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
 
     start_epoch = 0
     best_bleu = 0.0
