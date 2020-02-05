@@ -97,11 +97,11 @@ class Utils:
         return output.split(' ')
 
     @staticmethod
-    def eval_bleu_score(encoder, decoder, data_loader, vocab, device):
+    def eval_bleu_score(model, data_loader, vocab, device):
         
-        encoder.eval()
-        decoder.eval()
-        
+        #Set model into eval mode
+        model.eval()
+
         data_count = len(data_loader.dataset)
 
         predicted, actual = [], []
@@ -110,9 +110,10 @@ class Utils:
             image, caption = data_loader.dataset[i]
             image_tensor = Variable(image.unsqueeze(0).to(device))
 
-            features = encoder(image_tensor)
+            #Sample
+            sampled_ids = model.sample(image_tensor)
 
-            sampled_ids = decoder.sample(features)
+            #Convert tensor to numpy array
             sampled_ids = sampled_ids.cpu().data.numpy()
 
             predicted.append(sampled_ids)

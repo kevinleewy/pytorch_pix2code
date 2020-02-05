@@ -109,8 +109,21 @@ def main():
             assert vocab_size == checkpoint['hyp']['vocab_size'], 'incompatible vocab_sizes {} and {}'.format(vocab_size, checkpoint['hyp']['vocab_size'])
 
 
-    encoder = EncoderCNN(embed_size).to(device)
-    decoder = DecoderRNN(embed_size, hidden_size, vocab_size, num_layers).to(device)
+    #Create models
+    # encoder = EncoderCNN(embed_size)
+    # decoder = DecoderRNN(embed_size, hidden_size, vocab_size, num_layers)
+    model = Pix2Code(embed_size, hidden_size, vocab_size, num_layers)
+
+    #Multi-GPU training
+    if torch.cuda.device_count() > 1:
+        # encoder = nn.DataParallel(encoder)
+        # decoder = nn.DataParallel(decoder)
+        model = nn.DataParallel(model)
+
+    #Convert device
+    # encoder = encoder.to(device)
+    # decoder = decoder.to(device)
+    model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
     params = list(decoder.parameters()) + list(encoder.linear.parameters()) + list(encoder.bn.parameters())
@@ -122,8 +135,9 @@ def main():
     #Load model weights from checkpoint
     if checkpoint:
         # Load trained models
-        encoder.load_state_dict(checkpoint['encoder'], strict=True)
-        decoder.load_state_dict(checkpoint['decoder'], strict=True)
+        # encoder.load_state_dict(checkpoint['encoder'], strict=True)
+        # decoder.load_state_dict(checkpoint['decoder'], strict=True)
+        model.load_state_dict(checkpoint['model'], strict=True)
 
         # Load optimizer
         if opt.resume:
@@ -137,8 +151,9 @@ def main():
     batch_count = len(data_loader)
 
     for epoch in range(start_epoch, opt.num_epochs):
-        encoder.train()
-        decoder.train()
+        # encoder.train()
+        # decoder.train()
+        model.train()
         with tqdm(enumerate(data_loader), total=batch_count) as pbar: # progress bar
             for i, (images, captions, lengths) in pbar:
                 # Shape: torch.Size([batch_size, 3, crop_size, crop_size])
@@ -155,12 +170,14 @@ def main():
                 targets = nn.utils.rnn.pack_padded_sequence(input = captions, lengths = lengths, batch_first = True)[0]
 
                 # Zero out buffers
-                encoder.zero_grad()
-                decoder.zero_grad()
+                # encoder.zero_grad()
+                # decoder.zero_grad()
+                model.zero_grad()
 
                 # Forward, Backward, and Optimize
-                features = encoder(images) # Outputs features of torch.Size([batch_size, embed_size])
-                outputs = decoder(features, captions, lengths)
+                # features = encoder(images) # Outputs features of torch.Size([batch_size, embed_size])
+                # outputs = decoder(features, captions, lengths)
+                outputs = model(images, captions, lengths)
 
                 # CrossEntropyLoss is expecting:
                 # Input:  (N, C) where C = number of classes
@@ -176,7 +193,7 @@ def main():
 
         # Calculate BLEU score
         with torch.no_grad():
-            bleu, _ = Utils.eval_bleu_score(encoder, decoder, dev_data_loader, vocab, device)
+            bleu, _ = Utils.eval_bleu_score(model, dev_data_loader, vocab, device)
             print('BLEU score: ', bleu)
             if(bleu > best_bleu):
                 best_bleu = bleu
@@ -184,8 +201,9 @@ def main():
         # Create checkpoint
         checkpoint = {
             'epoch': epoch,
-            'encoder': encoder.state_dict(),
-            'decoder': decoder.state_dict(),
+            # 'encoder': encoder.state_dict(),
+            # 'decoder': decoder.state_dict(),
+            'model': model.state_dict(),
             'optimizer': optimizer.state_dict(),
             'best_bleu': best_bleu,
             'hyp': {
