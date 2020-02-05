@@ -110,19 +110,14 @@ def main():
 
 
     #Create models
-    # encoder = EncoderCNN(embed_size)
-    # decoder = DecoderRNN(embed_size, hidden_size, vocab_size, num_layers)
     model = Pix2Code(embed_size, hidden_size, vocab_size, num_layers)
 
     #Multi-GPU training
-    if torch.cuda.device_count() > 1:
-        # encoder = nn.DataParallel(encoder)
-        # decoder = nn.DataParallel(decoder)
-        model = nn.DataParallel(model, [0, 1])
+    if opt.parallel and torch.cuda.device_count() > 1:
+        model.encoder = nn.DataParallel(model.encoder, [0, 1])
+        # model = nn.DataParallel(model, [0, 1])
 
     #Convert device
-    # encoder = encoder.to(device)
-    # decoder = decoder.to(device)
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
@@ -136,8 +131,6 @@ def main():
     #Load model weights from checkpoint
     if checkpoint:
         # Load trained models
-        # encoder.load_state_dict(checkpoint['encoder'], strict=True)
-        # decoder.load_state_dict(checkpoint['decoder'], strict=True)
         model.load_state_dict(checkpoint['model'], strict=True)
 
         # Load optimizer
@@ -245,6 +238,7 @@ if __name__ == '__main__':
     parser.add_argument('--num-epochs', type=int, required=False, default=400, help='number of epochs')
     parser.add_argument('--batch-size', type=int, required=False, default=16, help='batch size')
     parser.add_argument('--resume', action='store_true', help='resume training')
+    parser.add_argument('--parallel', action='store_true', help='Multi-GPU training')
     opt = parser.parse_args()
     main()
 
