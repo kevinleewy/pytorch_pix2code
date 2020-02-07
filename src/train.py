@@ -46,7 +46,7 @@ def main():
     crop_size = 224 # Required by resnet152
 
     #Determine device
-    device = Utils.get_device()
+    device = Utils.get_device(opt.gpu_id)
 
     # Load vocabulary
     vocab = Utils.build_vocab(opt.vocab)
@@ -242,6 +242,7 @@ if __name__ == '__main__':
     parser.add_argument('--resume', action='store_true', help='resume training')
     parser.add_argument('--parallel', action='store_true', help='Multi-GPU training')
     parser.add_argument('--log', type=str, required=False, default='train.log', help='path to log file')
+    parser.add_argument('--gpu-id', type=int, required=False, default=0, help='GPU ID to use')
     opt = parser.parse_args()
     main()
 
