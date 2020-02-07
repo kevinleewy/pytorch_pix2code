@@ -27,7 +27,7 @@ def main():
 
     # Model Hyperparams
     embed_size = 1024
-    hidden_size = 512
+    hidden_size = 1024
     num_layers = 2
     learning_rate = opt.learning_rate
 
@@ -37,7 +37,6 @@ def main():
 
     # Logging/Saving Variables
     save_after_x_epochs = 10
-    log_step = 5
 
     # Dataset paths (For testing purposes, we use a pre-split dataset rather than do it here)
     data_dir = os.path.join(opt.dataset, 'training_set')
@@ -121,9 +120,9 @@ def main():
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
-    # params = list(model.decoder.parameters()) + list(model.encoder.linear.parameters()) + list(model.encoder.bn.parameters())
-    # optimizer = torch.optim.Adam(params, lr = learning_rate)
-    optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
+    params = list(model.decoder.parameters()) + list(model.encoder.linear.parameters()) + list(model.encoder.bn.parameters())
+    optimizer = torch.optim.Adam(params, lr = learning_rate)
+    # optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
 
     start_epoch = 0
     best_bleu = 0.0
