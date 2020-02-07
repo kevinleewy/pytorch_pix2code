@@ -238,7 +238,7 @@ if __name__ == '__main__':
     parser.add_argument('--vocab', '-v', type=str, required=False, default='../bootstrap.vocab', help='*-config.json path')
     parser.add_argument('--weights', '-w', type=str, required=False, default='', help='weights to preload into model')
     parser.add_argument('--num-epochs', type=int, required=False, default=400, help='number of epochs')
-    parser.add_argument('--learning-rate, -lr', type=float, required=False, default=0.001, help='learning rate')
+    parser.add_argument('--learning-rate', '-lr', type=float, required=False, default=0.001, help='learning rate')
     parser.add_argument('--batch-size', type=int, required=False, default=16, help='batch size')
     parser.add_argument('--resume', action='store_true', help='resume training')
     parser.add_argument('--parallel', action='store_true', help='Multi-GPU training')
