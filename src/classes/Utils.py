@@ -54,7 +54,7 @@ class Utils:
             for i in range(0, ng):
 
                 if i == gpu_id:
-                    cuda += ':' + str(i)
+                    device += ':' + str(i)
 
                 if i == 1:
                     cuda_str = ' ' * len(cuda_str)
