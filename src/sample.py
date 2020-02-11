@@ -93,12 +93,18 @@ def main():
     #Strip START and END tokens
     predicted = predicted.replace(START_TOKEN, "").replace(END_TOKEN, "")
 
-    output_path = opt.output
-    if not output_path.endswith('.gui'):
-        output_path += '.gui'
+    if(opt.output):
+        output_path = opt.output
+        
+        if not output_path.endswith('.gui'):
+            output_path += '.gui'
+
+        output_dir = os.path.dirname(output_path)
+    else:
+        output_dir = os.path.dirname(opt.input)
+        output_path = opt.input.replace('.png', '.gui')
 
     #Create output directory if it doesn't exist
-    output_dir = os.path.dirname(output_path)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -111,7 +117,7 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', '-i', type=str, required=True, help='input image path')
-    parser.add_argument('--output', '-o', type=str, required=True, help='output path (<path>/*.gui)')
+    parser.add_argument('--output', '-o', type=str, required=False, help='output path (<path>/*.gui)')
     parser.add_argument('--vocab', '-v', type=str, required=True, default='../bootstrap.vocab', help='*-config.json path')
     parser.add_argument('--weights', '-w', type=str, required=True, default='', help='weights to preload into model')
     parser.add_argument('--gpu-id', type=int, required=False, default=0, help='GPU ID to use')
