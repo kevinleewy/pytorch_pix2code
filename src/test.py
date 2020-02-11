@@ -26,33 +26,26 @@ from classes.Utils import *
 
 def main():
 
-    # Hyperparams
-    batch_size = 32
-    embed_size = 256
-    num_epochs = 1000
-    learning_rate = 0.005
-    hidden_size = 512
+    # Model Hyperparams
+    embed_size = 1024
+    hidden_size = 1024
     num_layers = 2
 
     # Other params
     shuffle = True
     num_workers = 2
 
-    # Logging/Saving Variables
-    save_after_x_epochs = 10
-    log_step = 5
-
-    # Paths
-    data_dir = '../datasets/web/training_set/' # For testing purposes, we use a pre-split dataset rather than do it here
-    dev_data_dir = '../datasets/web/eval_set/'
-    model_path = '../weights'
-    vocab_path = '../bootstrap.vocab'
+    # Dataset paths (For testing purposes, we use a pre-split dataset rather than do it here)
+    dev_data_dir = os.path.join(opt.dataset, 'eval_set')
 
     # DO NOT CHANGE:
     crop_size = 224 # Required by resnet152
 
+    #Determine device
+    device = Utils.get_device(opt.gpu_id)
+
     # Load vocabulary
-    vocab = build_vocab(vocab_path)
+    vocab = Utils.build_vocab(opt.vocab)
 
     vocab_size = len(vocab)
 
@@ -86,51 +79,51 @@ def main():
     ])
 
     # Create data loaders
-    img_html_dataset = ImageDataset(data_dir=data_dir, vocab=vocab, transform=transform)
-    data_loader = DataLoader(dataset=img_html_dataset,
-                            batch_size=batch_size,
-                            shuffle=shuffle,
-                            num_workers=num_workers,
-                            collate_fn=collate_fn)
-
     dev_img_html_dataset = ImageDataset(data_dir=dev_data_dir, vocab=vocab, transform=transform)
     dev_data_loader = DataLoader(dataset=dev_img_html_dataset,
-                            batch_size=batch_size,
+                            batch_size=opt.batch_size,
                             shuffle=shuffle,
                             num_workers=num_workers,
                             collate_fn=collate_fn)         
 
-    bleu_scores = []
 
-    # Initialize models
-    dev_encoder = EncoderCNN(embed_size).to(device)
-    dev_decoder = DecoderRNN(embed_size, hidden_size, len(vocab), num_layers).to(device)
+    for (dirpath, _, filenames) in os.walk(opt.weights_dir):
 
-    for model_idx, model_name in enumerate(models_to_test):
-        
-        # Load trained models
-        # encoder_model_path = os.path.join(model_path, 'encoder-{}.pkl'.format(model_name))
-        # decoder_model_path = os.path.join(model_path, 'decoder-{}.pkl'.format(model_name))
-        # dev_encoder.load_state_dict(torch.load(encoder_model_path))
-        # dev_decoder.load_state_dict(torch.load(decoder_model_path))
+        for f in filenames:
+            if f.endswith('.pkl'):
+                weights = os.path.join(dirpath, f)
 
-        checkpoint_path = os.path.join(model_path, model_name)
-        checkpoint = torch.load(checkpoint_path)
-        dev_encoder.load_state_dict(checkpoint['encoder'])
-        dev_decoder.load_state_dict(checkpoint['decoder'])
+                #Load data from checkpoint
+                checkpoint = torch.load(weights, map_location=device)
+                if 'hyp' in checkpoint:
+                    embed_size = checkpoint['hyp']['embed_size']
+                    hidden_size = checkpoint['hyp']['hidden_size']
+                    num_layers = checkpoint['hyp']['num_layers']
+                    assert vocab_size == checkpoint['hyp']['vocab_size'], 'incompatible vocab_sizes {} and {}'.format(vocab_size, checkpoint['hyp']['vocab_size'])
 
-        bleu, count = Utils.eval_bleu_score(dev_encoder, dev_decoder, dev_data_loader, vocab, device)    
-        
-        bleu_scores.append((model_name, bleu))
 
-        print('done with {} items for model: {}'.format(str(count), model_name))
+                #Create models
+                model = Pix2Code(embed_size, hidden_size, vocab_size, num_layers)
+
+                #Convert device
+                model = model.to(device)
+
+                # Load trained models
+                model.load_state_dict(checkpoint['model'], strict=True)
+
+                # Calculate BLEU score
+                with torch.no_grad():
+                    bleu, _ = Utils.eval_bleu_score(model, dev_data_loader, vocab, device)
+                    print('Weights: ', weights)
+                    print('BLEU score: ', bleu)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--out-dir', '-o', type=str, required=True, help='output path for saving model weights')
-    parser.add_argument('--config', '--cfg', '-c', type=str, required=True, help='*-config.json path')
-    parser.add_argument('--load', type=str, help='weights file to preload the model with')
-    parser.add_argument('--resume', action='store_true', help='resume training')
+    parser.add_argument('--dataset', type=str, required=True, help='dataset path. Must contain training_set and eval_set subdirectories.')
+    parser.add_argument('--vocab', '-v', type=str, required=False, default='../bootstrap.vocab', help='*-config.json path')
+    parser.add_argument('--weights-dir', '-w', type=str, required=True, help='weights directory to evaluate')
+    parser.add_argument('--batch-size', type=int, required=False, default=16, help='batch size')
+    parser.add_argument('--gpu-id', type=int, required=False, default=0, help='GPU ID to use')
     opt = parser.parse_args()
     main()
 
