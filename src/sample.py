@@ -67,7 +67,7 @@ def main():
     model = model.to(device)
 
     # Load trained models
-    # model.load_state_dict(checkpoint['model'], strict=True)
+    model.load_state_dict(checkpoint['model'], strict=True)
 
     #Set model to eval mode
     model.eval()
