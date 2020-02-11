@@ -92,6 +92,7 @@ def main():
         for f in filenames:
             if f.endswith('.pkl'):
                 weights = os.path.join(dirpath, f)
+                print('Weights: ', weights)
 
                 #Load data from checkpoint
                 checkpoint = torch.load(weights, map_location=device)
@@ -114,7 +115,6 @@ def main():
                 # Calculate BLEU score
                 with torch.no_grad():
                     bleu, _ = Utils.eval_bleu_score(model, dev_data_loader, vocab, device)
-                    print('Weights: ', weights)
                     print('BLEU score: ', bleu)
 
 if __name__ == '__main__':

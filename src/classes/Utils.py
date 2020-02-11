@@ -4,6 +4,7 @@ from nltk.translate.bleu_score import corpus_bleu
 import numpy as np
 import torch
 from torch.autograd import Variable
+from tqdm import tqdm
 from .Vocabulary import *
 
 class Utils:
@@ -116,18 +117,18 @@ class Utils:
 
         predicted, actual = [], []
 
-        for i in range(data_count):
-            image, caption = data_loader.dataset[i]
-            image_tensor = Variable(image.unsqueeze(0).to(device))
+        with tqdm(enumerate(data_loader.dataset), total=data_count) as pbar: # progress bar
+            for i, (image, caption) in pbar:
+                image_tensor = Variable(image.unsqueeze(0).to(device))
 
-            #Sample
-            sampled_ids = model.sample(image_tensor)
+                #Sample
+                sampled_ids = model.sample(image_tensor)
 
-            #Convert tensor to numpy array
-            sampled_ids = sampled_ids.cpu().data.numpy()
+                #Convert tensor to numpy array
+                sampled_ids = sampled_ids.cpu().data.numpy()
 
-            predicted.append(sampled_ids)
-            actual.append(caption.numpy())
+                predicted.append(sampled_ids)
+                actual.append(caption.numpy())
 
         predicted = [Utils.transform_idx_to_words(vocab, item) for item in predicted]
         actual = [[Utils.transform_idx_to_words(vocab, item)] for item in actual]
