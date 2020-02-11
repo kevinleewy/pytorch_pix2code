@@ -38,6 +38,6 @@ class Compiler:
                         element = Node(token, current_parent, self.content_holder)
                         current_parent.add_child(element)
 
-        output_html = self.root.render(self.elements, rendering_function=rendering_function, domain='web')
+        compiled_output = self.root.render(self.elements, rendering_function=rendering_function, domain=domain)
         with open(output_file_path, 'w') as output_file:
-            output_file.write(output_html)
+            output_file.write(compiled_output)

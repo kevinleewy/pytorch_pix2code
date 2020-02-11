@@ -85,7 +85,7 @@ class DecoderRNN (nn.Module):
         return outputs
     
     # Sample method used for testing our model
-    def sample (self, features, states=None, num_iter=100):
+    def sample (self, features, states=None, num_iter=200):
         sampled_ids = []
         inputs = features.unsqueeze(1)
         
