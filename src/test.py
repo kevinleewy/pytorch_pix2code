@@ -115,7 +115,6 @@ def main():
                 # Calculate BLEU score
                 with torch.no_grad():
                     bleu, _ = Utils.eval_bleu_score(model, dev_data_loader, vocab, device)
-                    print('BLEU score: ', bleu)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

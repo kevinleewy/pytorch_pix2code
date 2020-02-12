@@ -186,13 +186,12 @@ def main():
         # Calculate BLEU score
         with torch.no_grad():
             bleu, _ = Utils.eval_bleu_score(model, dev_data_loader, vocab, device)
-            print('BLEU score: ', bleu)
             if(bleu > best_bleu):
                 best_bleu = bleu
 
         # Log results
         with open(opt.log, 'a') as f:
-            f.write('{} {} BLEU: {}\n'.format(str(epoch), s, str(bleu)))
+            f.write('{} BLEU: {}\n'.format(s, str(bleu)))
 
         # Create checkpoint
         checkpoint = {

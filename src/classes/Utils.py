@@ -118,6 +118,9 @@ class Utils:
         predicted, actual = [], []
 
         with tqdm(enumerate(data_loader.dataset), total=data_count) as pbar: # progress bar
+            
+            pbar.set_description('    BLEU score: Computing...')
+            
             for i, (image, caption) in pbar:
                 image_tensor = Variable(image.unsqueeze(0).to(device))
 
@@ -130,10 +133,11 @@ class Utils:
                 predicted.append(sampled_ids)
                 actual.append(caption.numpy())
 
-        predicted = [Utils.transform_idx_to_words(vocab, item) for item in predicted]
-        actual = [[Utils.transform_idx_to_words(vocab, item)] for item in actual]
-        
-        bleu = corpus_bleu(actual, predicted)
+            predicted = [Utils.transform_idx_to_words(vocab, item) for item in predicted]
+            actual = [[Utils.transform_idx_to_words(vocab, item)] for item in actual]
+            
+            bleu = corpus_bleu(actual, predicted)
+            pbar.set_description('    BLEU score: %.12f' % (bleu))
 
         return bleu, len(predicted)
 
