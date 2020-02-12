@@ -23,6 +23,10 @@ class Compiler:
 
             for line in input_file:
                 line = line.replace(" ", "").replace("\n", "")
+
+                if line == '':
+                    continue
+
                 tokens = line.split(",")
 
                 for token in tokens:
