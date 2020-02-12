@@ -64,7 +64,7 @@
                     ]
                 },
                 {
-                    "min_weight": 1,
+                    "min_weight": 3,
                     "max_weight": 5,
                     "children": [
                         {
