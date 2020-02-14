@@ -189,6 +189,9 @@ def main():
             if(bleu > best_bleu):
                 best_bleu = bleu
 
+        if not os.path.exists(opt.out_dir):
+            os.makedirs(opt.out_dir)
+
         # Log results
         with open(opt.log, 'a') as f:
             f.write('{} BLEU: {}\n'.format(s, str(bleu)))
@@ -206,9 +209,6 @@ def main():
                 'vocab_size': vocab_size
             }
         }
-
-        if not os.path.exists(opt.out_dir):
-            os.makedirs(opt.out_dir)
 
         # Save last checkpoint
         torch.save(checkpoint, os.path.join(opt.out_dir, 'last.pkl'))
