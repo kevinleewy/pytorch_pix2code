@@ -25,9 +25,9 @@ from classes.Utils import *
 def main():
 
     # Model Hyperparams
-    embed_size = 1024
-    hidden_size = 1024
-    num_layers = 2
+    embed_size = opt.embed_size
+    hidden_size = opt.hidden_size
+    num_layers = opt.num_layers
     learning_rate = opt.learning_rate
 
     # Other params
@@ -237,6 +237,9 @@ if __name__ == '__main__':
     parser.add_argument('--num-epochs', type=int, required=False, default=400, help='number of epochs')
     parser.add_argument('--learning-rate', '-lr', type=float, required=False, default=0.001, help='learning rate')
     parser.add_argument('--batch-size', type=int, required=False, default=16, help='batch size')
+    parser.add_argument('--embed-size', type=int, required=False, default=1024, help='dim of embedding')
+    parser.add_argument('--hidden_size', type=int, required=False, default=1024, help='dim of LSTM hidden layer')
+    parser.add_argument('--num_layers', type=int, required=False, default=1, help='number of LSTM layers')
     parser.add_argument('--resume', action='store_true', help='resume training')
     parser.add_argument('--parallel', action='store_true', help='Multi-GPU training')
     parser.add_argument('--log', type=str, required=False, default='train.log', help='path to log file')
