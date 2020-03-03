@@ -13,35 +13,53 @@ from torch.autograd import Variable
 from torchvision import transforms
 from PIL import Image
 
-from classes.dataset.ImageDataset import *
-from classes.model.pix2code import *
+from .classes.dataset.ImageDataset import *
+from .classes.model.pix2code import *
 
-from classes.Utils import *
-from classes.Vocabulary import *
+from .classes.Utils import *
+from .classes.Vocabulary import *
 
-def main():
-    
+def build_model_and_vocab(vocab_path, weights_path, device='cpu'):
+
     # Model Hyperparams
     embed_size = 1024
     hidden_size = 1024
     num_layers = 2
 
-    # Other params
-    shuffle = True
-    num_workers = 2
-
-    # DO NOT CHANGE:
-    crop_size = 224 # Required by resnet152
-
-    #Determine device
-    device = Utils.get_device(opt.gpu_id)
-
     # Load vocabulary
-    vocab = Utils.build_vocab(opt.vocab)
+    vocab = Utils.build_vocab(vocab_path)
 
     vocab_size = len(vocab)
 
     print(vocab.word2idx)
+
+    #Load data from checkpoint
+    checkpoint = torch.load(weights_path, map_location=device)
+    if 'hyp' in checkpoint:
+        embed_size = checkpoint['hyp']['embed_size']
+        hidden_size = checkpoint['hyp']['hidden_size']
+        num_layers = checkpoint['hyp']['num_layers']
+        assert vocab_size == checkpoint['hyp']['vocab_size'], 'incompatible vocab_sizes {} and {}'.format(vocab_size, checkpoint['hyp']['vocab_size'])
+
+
+    # Create models
+    model = Pix2Code(embed_size, hidden_size, vocab_size, num_layers)
+
+    # Convert device
+    model = model.to(device)
+
+    # Load trained models
+    model.load_state_dict(checkpoint['model'], strict=True)
+
+    # Set model to eval mode
+    model.eval()
+
+    return model, vocab
+
+def sample(image, model, vocab, device='cpu'):
+
+    # DO NOT CHANGE:
+    crop_size = 224 # Required by resnet152
 
     # Transform to modify images for pre-trained ResNet base
     transform = transforms.Compose([
@@ -51,30 +69,7 @@ def main():
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
-    #Load data from checkpoint
-    checkpoint = torch.load(opt.weights, map_location=device)
-    if 'hyp' in checkpoint:
-        embed_size = checkpoint['hyp']['embed_size']
-        hidden_size = checkpoint['hyp']['hidden_size']
-        num_layers = checkpoint['hyp']['num_layers']
-        assert vocab_size == checkpoint['hyp']['vocab_size'], 'incompatible vocab_sizes {} and {}'.format(vocab_size, checkpoint['hyp']['vocab_size'])
-
-
-    #Create models
-    model = Pix2Code(embed_size, hidden_size, vocab_size, num_layers)
-
-    #Convert device
-    model = model.to(device)
-
-    # Load trained models
-    model.load_state_dict(checkpoint['model'], strict=True)
-
-    #Set model to eval mode
-    model.eval()
-
-    # Get image from filesystem
-    assert opt.input.endswith('.png'), 'unsupported input format'
-    image = Image.open(opt.input).convert('RGB')
+    image = image.convert('RGB')
     image = transform(image)
 
     image_tensor = Variable(image.unsqueeze(0).to(device))
@@ -92,6 +87,24 @@ def main():
 
     #Strip START and END tokens
     predicted = predicted.replace(START_TOKEN, "").replace(END_TOKEN, "")
+
+    return predicted
+
+def main():
+
+    #Determine device
+    device = Utils.get_device(opt.gpu_id)
+
+    # Load model and vocab
+    model, vocab = build_model_and_vocab(opt.vocab, opt.weights, device)
+
+    # Get image from filesystem
+    assert opt.input.endswith('.png'), 'unsupported input format'
+
+    image = Image.open(opt.input)
+
+    # Sample
+    predicted = sample(image, model, vocab, device)
 
     if(opt.output):
         output_path = opt.output

@@ -2,8 +2,9 @@
 __author__ = 'Kevin Lee - kevin_lee@claris.com'
 
 import json
-from classes.Node import *
+import sys
 
+from .Node import *
 
 class Compiler:
     def __init__(self, config_path):

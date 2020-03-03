@@ -1,0 +1,161 @@
+.fm-global-width {
+    max-width: 1200px;
+    padding: 0px 0px;
+}
+
+#global-header[_ngcontent-c3] .navbar[_ngcontent-c3] {
+    height: 50px;
+    background: #333;
+    padding: 0px !important;
+}
+
+#global-header[_ngcontent-c3] .navbar-brand[_ngcontent-c3], #global-header[_ngcontent-c3] .navbar-brand[_ngcontent-c3]:hover {
+    cursor: default;
+}
+
+a[_ngcontent-c3]:link, a[_ngcontent-c3]:visited {
+    text-decoration: none;
+}
+
+#fm-logo-txt[_ngcontent-c3] {
+    pointer-events: none;
+}
+
+.fm-notifications.nav-item.dropdown[_ngcontent-c6] {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    width: 21px;
+    height: 21px;
+    background: url(/assets/img/ic-notification-w.svg) bottom center no-repeat;
+    background-size: 18px 18px;
+    margin-top: 7px;
+}
+
+.user-dropdown[_ngcontent-c6] button.nav-link[_ngcontent-c6], button#fm-notifications-nav-link[_ngcontent-c6] {
+    background-color: transparent;
+    border: none;
+}
+.user-dropdown[_ngcontent-c6] button.nav-link[_ngcontent-c6], button#fm-notifications-nav-link[_ngcontent-c6] {
+    background-color: transparent;
+    border: none;
+}
+
+.fm-notifications.nav-item.dropdown[_ngcontent-c6] div.dropdown-menu.dropdown-notif[_ngcontent-c6] {
+    margin-top: 24px;
+}
+
+.navbar[_ngcontent-c3] div.divider[_ngcontent-c3] {
+    font-size: 18px;
+    color: #666;
+    margin: 1px 10px;
+}
+.navbar-nav[_ngcontent-c3] .divider[_ngcontent-c3] {
+    padding-top: 3px;
+}
+
+#global-header[_ngcontent-c3] .nav-link[_ngcontent-c3] {
+    cursor: pointer;
+}
+.navbar-dark[_ngcontent-c3] .navbar-nav[_ngcontent-c3] .nav-link[_ngcontent-c3] {
+    color: white;
+    padding-right: 0px;
+}
+.user-dropdown[_ngcontent-c3] button.nav-link[_ngcontent-c3], button#fm-notifications-nav-link[_ngcontent-c3] {
+    background-color: transparent;
+    border: none;
+}
+
+span.fm-username[_ngcontent-c3] {
+    font-family: "SF Pro Display", "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    letter-spacing: 0.2px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    text-align: right;
+}
+
+.navbar-expand[_ngcontent-c3] .navbar-nav[_ngcontent-c3] .dropdown-menu[_ngcontent-c3] {
+    z-index: 4000;
+}
+
+.user-dropdown[_ngcontent-c3] .dropdown-menu[_ngcontent-c3] .dropdown-pointer[_ngcontent-c3] {
+    background-position: 100% 0px;
+}
+
+.dropdown-menu[_ngcontent-c3] .dropdown-pointer[_ngcontent-c3] {
+    top: -12px;
+    background-size: 30px 12px;
+    display: block;
+    position: absolute;
+    width: 100%;
+    background-image: url(/assets/img/ic-dropdown-pointer.svg);
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px) 0px;
+}
+
+.navbar {
+    padding: 0px;
+}
+
+.navbar-nav {
+    border-bottom: 1px solid #ddd;
+    margin: auto;
+    padding: 0px 3px;
+}
+
+.navbar .nav-link.active {
+    border-bottom: 1px solid black;
+}
+
+.navbar a {
+    padding: 8px 28px;
+    margin: -1px;
+    font-size: 15px;
+    color: #666;
+    letter-spacing: -0.225px;
+    text-align: center;
+    line-height: 24px;
+}
+
+footer {
+    border-top: none;
+    background-color: transparent;
+    text-align: center;
+}
+
+#copyright-info {
+    color: #888;
+    font-size: 11px;
+    position: unset;
+}
+
+ul.footerLegalLinks {
+    list-style-type: none;
+    display: block;
+    margin: 0px auto;
+    padding: 0px;
+    text-align: center;
+    width: 100%;
+    line-height: 1.5;
+}
+
+ul.footerLegalLinks li {
+    display: inline-block;
+    padding: 0px 10px;
+}
+
+.footerLegalLinks a {
+    color: #555;
+    font-size: 12px;
+    position: unset;
+}
+
+a:link, a:visited {
+    text-decoration: none;
+}
+
+.footerLinks-divider {
+    color: #d6d6d6;
+    margin: auto 5px;
+}

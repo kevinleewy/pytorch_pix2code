@@ -8,8 +8,8 @@ import re
 import sys
 
 from os.path import basename
-from classes.Utils import *
-from classes.Compiler import *
+from .classes.Utils import *
+from .classes.Compiler import *
 
 def compile(compiler, input_file, text_placeholder=None, domain='web'):
     def render_content_with_text(key, value, cfg={}):

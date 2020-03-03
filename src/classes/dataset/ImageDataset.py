@@ -3,8 +3,8 @@ import torch
 from torch.utils.data import Dataset
 from PIL import Image
 
-from classes.Utils import *
-from classes.Vocabulary import *
+from ..Utils import *
+from ..Vocabulary import *
 
 class ImageDataset (Dataset):
     def __init__ (self, data_dir, vocab, transform):
