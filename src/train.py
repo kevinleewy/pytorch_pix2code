@@ -239,7 +239,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch-size', type=int, required=False, default=16, help='batch size')
     parser.add_argument('--embed-size', type=int, required=False, default=1024, help='dim of embedding')
     parser.add_argument('--hidden_size', type=int, required=False, default=1024, help='dim of LSTM hidden layer')
-    parser.add_argument('--num_layers', type=int, required=False, default=1, help='number of LSTM layers')
+    parser.add_argument('--num-layers', type=int, required=False, default=1, help='number of LSTM layers')
     parser.add_argument('--resume', action='store_true', help='resume training')
     parser.add_argument('--parallel', action='store_true', help='Multi-GPU training')
     parser.add_argument('--log', type=str, required=False, default='train.log', help='path to log file')
