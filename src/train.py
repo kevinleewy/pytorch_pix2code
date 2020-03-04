@@ -193,7 +193,7 @@ def main():
             os.makedirs(opt.out_dir)
 
         # Log results
-        with open(opt.log, 'a') as f:
+        with open(opt.log, 'a+') as f:
             f.write('{} BLEU: {}\n'.format(s, str(bleu)))
 
         # Create checkpoint
