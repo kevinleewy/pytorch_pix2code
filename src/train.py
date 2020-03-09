@@ -17,10 +17,11 @@ from torchvision import datasets, models, transforms
 from tqdm import tqdm
 from PIL import Image
 
+from classes.dataset.ImageDataLoader import getDataLoader
 from classes.dataset.ImageDataset import *
-from classes.model.pix2code import *
+from classes.model.pix2code import Pix2Code
 
-from classes.Utils import *
+from classes.Utils import Utils
 
 def main():
 
@@ -29,10 +30,6 @@ def main():
     hidden_size = opt.hidden_size
     num_layers = opt.num_layers
     learning_rate = opt.learning_rate
-
-    # Other params
-    shuffle = True
-    num_workers = 2
 
     # Logging/Saving Variables
     save_after_x_epochs = 10
@@ -54,47 +51,9 @@ def main():
 
     print(vocab.word2idx)
 
-    # See https://github.com/yunjey/pytorch-tutorial/tree/master/tutorials/03-advanced/image_captioning
-    def collate_fn (data):
-        # Sort datalist by caption length; descending order
-        data.sort(key = lambda data_pair: len(data_pair[1]), reverse=True)
-        images, captions = zip(*data)
-        
-        # Merge images (from tuple of 3D Tensor to 4D Tensor)
-        images = torch.stack(images, 0)
-        
-        # Merge captions (from tuple of 1D tensor to 2D tensor)
-        lengths = [len(caption) for caption in captions] # List of caption lengths
-        targets = torch.zeros(len(captions), max(lengths)).long()
-        
-        for i, caption in enumerate(captions):
-            end = lengths[i]
-            targets[i, :end] = caption[:end]
-            
-        return images, targets, lengths
-
-    # Transform to modify images for pre-trained ResNet base
-    transform = transforms.Compose([
-        transforms.Resize((crop_size, crop_size)), # Match resnet size
-        transforms.ToTensor(),
-        # See for magic #'s: http://pytorch.org/docs/master/torchvision/models.html
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
-
     # Create data loaders
-    img_html_dataset = ImageDataset(data_dir=data_dir, vocab=vocab, transform=transform)
-    data_loader = DataLoader(dataset=img_html_dataset,
-                            batch_size=opt.batch_size,
-                            shuffle=shuffle,
-                            num_workers=num_workers,
-                            collate_fn=collate_fn)
-
-    dev_img_html_dataset = ImageDataset(data_dir=dev_data_dir, vocab=vocab, transform=transform)
-    dev_data_loader = DataLoader(dataset=dev_img_html_dataset,
-                            batch_size=opt.batch_size,
-                            shuffle=shuffle,
-                            num_workers=num_workers,
-                            collate_fn=collate_fn)         
+    data_loader = getDataLoader(data_dir, vocab, opt.batch_size)
+    dev_data_loader = getDataLoader(dev_data_dir, vocab, opt.batch_size)  
 
     #Load data from checkpoint
     checkpoint = None

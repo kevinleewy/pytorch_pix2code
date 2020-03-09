@@ -1,9 +1,6 @@
 from __future__ import absolute_import
 __author__ = 'Kevin Lee - kevin_lee@claris.com'
 
-from .Config import *
-from .AModel import *
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

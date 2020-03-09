@@ -141,3 +141,39 @@ class Utils:
 
         return bleu, len(predicted)
 
+    @staticmethod
+    def compute_saliency_maps(X, y, model, criterion, optimizer, device):
+        """
+        Compute a class saliency map using the model for images X and labels y.
+        Input:
+        - X: Input images; Tensor of shape (N, 3, H, W)
+        - y: Labels for X; LongTensor of shape (N,)
+        - model: A pretrained CNN that will be used to compute the saliency map.
+        Returns:
+        - saliency: A Tensor of shape (N, H, W) giving the saliency maps for the input images.
+        """
+        # Make sure the model is in "test" mode
+        model.eval()
+        
+        #Move tensors to correct device
+        X = X.to(device)
+        y = y.to(device)
+        
+        # Make input tensor require gradient
+        X.requires_grad_()
+    
+        #Forward pass 
+        outputs = model(X)
+        loss = criterion(outputs, y)
+        
+        #Backward pass
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        
+        #To compute the saliency map, we take the absolute value
+        #of this gradient, then take the maximum value over the
+        #3 input channels
+        saliency, _ = X.grad.abs().max(dim=1)
+        return saliency, outputs.cpu().detach().numpy()
+

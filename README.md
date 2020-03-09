@@ -85,6 +85,12 @@ cd src
 ./train.py ../datasets/web/training_features ../bin 1 ../bin/pix2code.h5
 ```
 
+Test:
+```sh
+# test trained models
+python3 src/test.py --dataset datasets/web --vocab bootstrap4.vocab --weights-dir weights --batch-size 1 --gpu-id 0
+```
+
 Generate code for batch of GUIs:
 ```sh
 mkdir code

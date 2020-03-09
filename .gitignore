@@ -156,6 +156,7 @@ fabric.properties
 # Generated dataset files
 datasets/*
 !datasets/pix2code_datasets.z*
+demo/static/output/*
 
 # Training output
 bin/
