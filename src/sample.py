@@ -13,10 +13,10 @@ from torch.autograd import Variable
 from torchvision import transforms
 from PIL import Image
 
-from .classes.dataset.ImageDataset import *
-from .classes.model.pix2code import *
+from .classes.dataset.ImageDataLoader import transform
+from .classes.model.pix2code import Pix2Code
 
-from .classes.Utils import *
+from .classes.Utils import Utils
 from .classes.Vocabulary import *
 
 def build_model_and_vocab(vocab_path, weights_path, device='cpu'):
@@ -57,17 +57,6 @@ def build_model_and_vocab(vocab_path, weights_path, device='cpu'):
     return model, vocab
 
 def sample(image, model, vocab, device='cpu'):
-
-    # DO NOT CHANGE:
-    crop_size = 224 # Required by resnet152
-
-    # Transform to modify images for pre-trained ResNet base
-    transform = transforms.Compose([
-        transforms.Resize((crop_size, crop_size)), # Match resnet size
-        transforms.ToTensor(),
-        # See for magic #'s: http://pytorch.org/docs/master/torchvision/models.html
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
 
     image = image.convert('RGB')
     image = transform(image)

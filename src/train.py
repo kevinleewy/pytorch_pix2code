@@ -35,11 +35,8 @@ def main():
     save_after_x_epochs = 10
 
     # Dataset paths (For testing purposes, we use a pre-split dataset rather than do it here)
-    data_dir = os.path.join(opt.dataset, 'training_set')
+    train_data_dir = os.path.join(opt.dataset, 'training_set')
     dev_data_dir = os.path.join(opt.dataset, 'eval_set')
-
-    # DO NOT CHANGE:
-    crop_size = 224 # Required by resnet152
 
     #Determine device
     device = Utils.get_device(opt.gpu_id)
@@ -52,7 +49,7 @@ def main():
     print(vocab.word2idx)
 
     # Create data loaders
-    data_loader = getDataLoader(data_dir, vocab, opt.batch_size)
+    data_loader = getDataLoader(train_data_dir, vocab, opt.batch_size)
     dev_data_loader = getDataLoader(dev_data_dir, vocab, opt.batch_size)  
 
     #Load data from checkpoint
@@ -102,9 +99,10 @@ def main():
     batch_count = len(data_loader)
 
     for epoch in range(start_epoch, opt.num_epochs):
-        # encoder.train()
-        # decoder.train()
+
+        # Set model to train mode
         model.train()
+
         with tqdm(enumerate(data_loader), total=batch_count) as pbar: # progress bar
             for i, (images, captions, lengths) in pbar:
                 # Shape: torch.Size([batch_size, 3, crop_size, crop_size])
