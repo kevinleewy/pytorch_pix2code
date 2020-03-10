@@ -4,6 +4,7 @@ from nltk.translate.bleu_score import corpus_bleu
 import numpy as np
 import torch
 from torch.autograd import Variable
+import torch.nn as nn
 from tqdm import tqdm
 from .Vocabulary import *
 
@@ -142,7 +143,7 @@ class Utils:
         return bleu, len(predicted)
 
     @staticmethod
-    def compute_saliency_maps(X, y, model, criterion, optimizer, device):
+    def compute_saliency_maps(images, captions, lengths, model, criterion, optimizer, device):
         """
         Compute a class saliency map using the model for images X and labels y.
         Input:
@@ -156,15 +157,26 @@ class Utils:
         model.eval()
         
         #Move tensors to correct device
-        X = X.to(device)
-        y = y.to(device)
+
+        # Shape: torch.Size([batch_size, 3, crop_size, crop_size])
+        images = Variable(images.to(device))
+
+        # Shape: torch.Size([batch_size, len(longest caption)])
+        captions = Variable(captions.to(device))
+
+        # lengths is a list of how long captions are in descending order (e.g., [77, 77, 75, 25])
+
+        # We remove the paddings from captions that are padded and then pack them into a single sequence
+        # Our data loader's collate_fn adds extra zeros to the end of sequences that are too short
+        # Shape: torch.Size([sum(lengths)])
+        targets = nn.utils.rnn.pack_padded_sequence(input = captions, lengths = lengths, batch_first = True)[0]
         
         # Make input tensor require gradient
-        X.requires_grad_()
+        images.requires_grad_()
     
         #Forward pass 
-        outputs = model(X)
-        loss = criterion(outputs, y)
+        outputs = model(images, captions, lengths)
+        loss = criterion(outputs, targets)
         
         #Backward pass
         optimizer.zero_grad()
@@ -174,6 +186,6 @@ class Utils:
         #To compute the saliency map, we take the absolute value
         #of this gradient, then take the maximum value over the
         #3 input channels
-        saliency, _ = X.grad.abs().max(dim=1)
-        return saliency, outputs.cpu().detach().numpy()
+        saliency, _ = images.grad.abs().max(dim=1)
+        return saliency
 

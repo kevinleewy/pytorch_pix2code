@@ -81,7 +81,7 @@ def sample(image, model, vocab, device='cpu'):
 
 def main():
 
-    #Determine device
+    # Determine device
     device = Utils.get_device(opt.gpu_id)
 
     # Load model and vocab

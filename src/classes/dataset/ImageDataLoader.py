@@ -42,4 +42,4 @@ def getDataLoader(data_dir, vocab, batch_size, shuffle=True, num_workers=2):
                             shuffle=shuffle,
                             num_workers=num_workers,
                             collate_fn=collate_fn)
-    return data_loader
+    return data_loader, dataset.raw_image_names

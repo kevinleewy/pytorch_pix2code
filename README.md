@@ -91,6 +91,12 @@ Test:
 python3 src/test.py --dataset datasets/web --vocab bootstrap4.vocab --weights-dir weights --batch-size 1 --gpu-id 0
 ```
 
+Analyze saliency maps:
+```sh
+# analyze saliency map
+python3 src/analyze.py --dataset datasets/web/eval_set --vocab bootstrap4.vocab --weights weights/best.pkl --out-dir ./analysis --gpu-id 0
+```
+
 Generate code for batch of GUIs:
 ```sh
 mkdir code

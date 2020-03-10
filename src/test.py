@@ -37,7 +37,7 @@ def main():
     print(vocab.word2idx)
 
     # Create data loader
-    data_loader = getDataLoader(dev_data_dir, vocab, opt.batch_size)
+    data_loader, _ = getDataLoader(dev_data_dir, vocab, opt.batch_size)
 
     for (dirpath, _, filenames) in os.walk(opt.weights_dir):
 

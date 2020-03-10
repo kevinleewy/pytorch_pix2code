@@ -49,8 +49,8 @@ def main():
     print(vocab.word2idx)
 
     # Create data loaders
-    data_loader = getDataLoader(train_data_dir, vocab, opt.batch_size)
-    dev_data_loader = getDataLoader(dev_data_dir, vocab, opt.batch_size)  
+    data_loader, _ = getDataLoader(train_data_dir, vocab, opt.batch_size)
+    dev_data_loader, _ = getDataLoader(dev_data_dir, vocab, opt.batch_size)  
 
     #Load data from checkpoint
     checkpoint = None
