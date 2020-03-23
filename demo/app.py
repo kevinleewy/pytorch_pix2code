@@ -42,6 +42,8 @@ app = Flask(__name__)
 model_path = '../weights/best.pkl'
 model, vocab = build_model_and_vocab('../bootstrap4.vocab', model_path)
 
+beam_size = 10
+
 @app.route('/', methods=['GET'])
 def index():
     # Main page
@@ -57,7 +59,7 @@ def predict():
         # Save the image to ./uploads
         # img.save("./uploads/image.png")
 
-        prediction = sample(img, model, vocab)
+        prediction = sample(img, model, vocab, beam_size)
 
         content_hash = prediction.replace(" ", "").replace("\n", "")
         content_hash = hashlib.sha256(content_hash.encode('utf-8')).hexdigest()

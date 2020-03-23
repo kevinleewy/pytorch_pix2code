@@ -140,9 +140,10 @@ def main():
 
         # end batch ------------------------------------------------------------------------------------------------
 
-        # Calculate BLEU score
+        # Calculate BLEU scores
         with torch.no_grad():
-            bleu, _ = Utils.eval_bleu_score(model, dev_data_loader, vocab, device)
+            test_results = Utils.eval_bleu_score(model, dev_data_loader, vocab, device)
+            bleu = max([result['bleu_score'] for result in test_results])
             if(bleu > best_bleu):
                 best_bleu = bleu
 

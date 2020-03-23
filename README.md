@@ -97,6 +97,12 @@ Analyze saliency maps:
 python3 src/analyze.py --dataset datasets/web/eval_set --vocab bootstrap4.vocab --weights weights/best.pkl --out-dir ./analysis --gpu-id 0
 ```
 
+Convert Pix2Code:
+```sh
+# convert png to .gui
+python3 src/sample.py --input small_datasets/web/training_set/4bd4e2bf0c57b92d192498df7533afa08c05723f98926dd4714b944b27a40f45.png --output output/4bd4e2bf0c57b92d192498df7533afa08c05723f98926dd4714b944b27a40f45.gui --vocab bootstrap4.vocab --weights weights/best.pkl --gpu-id 0 --beam-size 1
+```
+
 Generate code for batch of GUIs:
 ```sh
 mkdir code

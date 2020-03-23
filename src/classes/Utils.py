@@ -109,38 +109,48 @@ class Utils:
         return output.split(' ')
 
     @staticmethod
-    def eval_bleu_score(model, data_loader, vocab, device):
+    def eval_bleu_score(model, data_loader, vocab, beam_sizes=[1, 5, 10], device='cpu'):
         
         #Set model into eval mode
         model.eval()
 
-        data_count = len(data_loader.dataset)
+        results = []
 
-        predicted, actual = [], []
-
-        with tqdm(enumerate(data_loader.dataset), total=data_count) as pbar: # progress bar
+        for beam_size in beam_sizes:
             
-            pbar.set_description('    BLEU score: Computing...')
-            
-            for i, (image, caption) in pbar:
-                image_tensor = Variable(image.unsqueeze(0).to(device))
+            data_count = len(data_loader.dataset)
 
-                #Sample
-                sampled_ids = model.sample(image_tensor)
+            predicted, actual = [], []
 
-                #Convert tensor to numpy array
-                sampled_ids = sampled_ids.cpu().data.numpy()
+            with tqdm(enumerate(data_loader.dataset), total=data_count) as pbar: # progress bar
+                
+                pbar.set_description('    BLEU score: Computing...')
+                
+                for i, (image, caption) in pbar:
+                    image_tensor = Variable(image.unsqueeze(0).to(device))
 
-                predicted.append(sampled_ids)
-                actual.append(caption.numpy())
+                    #Sample
+                    sampled_ids = model.sample(image_tensor, vocab, beam_size)
 
-            predicted = [Utils.transform_idx_to_words(vocab, item) for item in predicted]
-            actual = [[Utils.transform_idx_to_words(vocab, item)] for item in actual]
-            
-            bleu = corpus_bleu(actual, predicted)
-            pbar.set_description('    BLEU score: %.12f' % (bleu))
+                    #Convert tensor to numpy array
+                    sampled_ids = sampled_ids.cpu().data.numpy()
 
-        return bleu, len(predicted)
+                    predicted.append(sampled_ids)
+                    actual.append(caption.numpy())
+
+                predicted = [Utils.transform_idx_to_words(vocab, item) for item in predicted]
+                actual = [[Utils.transform_idx_to_words(vocab, item)] for item in actual]
+                
+                bleu = corpus_bleu(actual, predicted)
+                pbar.set_description('  Beam Size: %d BLEU score: %.12f' % (beam_size, bleu))
+
+                results.append({
+                    'beam_size': beam_size,
+                    'bleu_score': bleu,
+                    'count': data_count
+                })
+
+        return results
 
     @staticmethod
     def compute_saliency_maps(images, captions, lengths, model, criterion, optimizer, device):
@@ -174,7 +184,7 @@ class Utils:
         # Make input tensor require gradient
         images.requires_grad_()
     
-        #Forward pass 
+        #Forward pass
         outputs = model(images, captions, lengths)
         loss = criterion(outputs, targets)
         

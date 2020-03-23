@@ -7,6 +7,7 @@ import argparse
 import numpy as np
 import os
 import pdb
+import sys
 import torch
 import torchvision
 from torch.autograd import Variable
@@ -56,7 +57,7 @@ def build_model_and_vocab(vocab_path, weights_path, device='cpu'):
 
     return model, vocab
 
-def sample(image, model, vocab, device='cpu'):
+def sample(image, model, vocab, beam_size, device='cpu'):
 
     image = image.convert('RGB')
     image = transform(image)
@@ -64,7 +65,8 @@ def sample(image, model, vocab, device='cpu'):
     image_tensor = Variable(image.unsqueeze(0).to(device))
 
     #Sample
-    sampled_ids = model.sample(image_tensor)
+    with torch.no_grad():
+        sampled_ids = model.sample(image_tensor, vocab, beam_size=beam_size)
 
     #Convert tensor to numpy array
     sampled_ids = sampled_ids.cpu().data.numpy()
@@ -93,7 +95,7 @@ def main():
     image = Image.open(opt.input)
 
     # Sample
-    predicted = sample(image, model, vocab, device)
+    predicted = sample(image, model, vocab, opt.beam_size, device)
 
     if(opt.output):
         output_path = opt.output
@@ -123,6 +125,7 @@ if __name__ == '__main__':
     parser.add_argument('--vocab', '-v', type=str, required=True, default='../bootstrap.vocab', help='*-config.json path')
     parser.add_argument('--weights', '-w', type=str, required=True, default='', help='weights to preload into model')
     parser.add_argument('--gpu-id', type=int, required=False, default=0, help='GPU ID to use')
+    parser.add_argument('--beam-size', type=int, required=False, default=3, help='Beam size for beam search')
     opt = parser.parse_args()
     main()
 
